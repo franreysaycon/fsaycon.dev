@@ -6,6 +6,7 @@ import HeroImage from "./HeroImage"
 import Box from "./Box"
 
 const HeroBox = styled(Box)`
+  flex-grow: 1.2;
   @media (min-width: ${({ theme }) => theme.breakpoints[2]}) {
     align-items: flex-end;
   }
@@ -78,8 +79,9 @@ const Hero: React.FC = () => (
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.6 }}
       >
-        Hi there! I like sharing my knowledge about software engineering and architecture.
-        I love solving problems. Let&apos;s learn together!
+        Solving problems with code. 
+        <br />
+        Sharing and gaining knowledge with and from the community.
       </Detail>
     </DetailBox>
   </Container>

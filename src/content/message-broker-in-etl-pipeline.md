@@ -12,7 +12,7 @@ Let's go through the journey of designing your ETL pipeline.
 
 Let's say, we created one script for the whole ETL process and it's just scheduled through a cron or using a workflow manager tools like Airflow to schedule the run of these scripts. This is described by the image down below. For this article, I won't be considering workflow manager tools' ability to scale your pipelines but rather provide another perspective that worked in my experience.
 
-!["Simple one script architecture."](/message-broker-in-etl-pipeline/1.svg)
+!["Simple one script architecture."](/message-broker-in-etl-pipeline/1.png)
 
 ---
 
@@ -20,7 +20,7 @@ For simple datasets, one script is sufficient especially if the volume of data i
 
 To allow parallelism, you may practice replication. It follows we create some sort of configuration management per replication to avoid processing similar bulks of data. There are other ways to make this replication much more robust with a single script but we won't be exploring those options for this article. Let's keep it simple. These replications will be running in parallel on every defined schedule in your method of choice.
 
-!["Simple replication of one script architecture."](/message-broker-in-etl-pipeline/2.svg)
+!["Simple replication of one script architecture."](/message-broker-in-etl-pipeline/2.png)
 
 ---
 
@@ -28,7 +28,7 @@ The above implementation might be enough for a lot of cases but what if we want 
 
 However, for this to be able to work, we would need a way for these workers to communicate to each other. This just becomes more complicated if these workers are scaled differently. How will we know which workers are free? How will we manage the activation of every worker? What if one service suddenly broke down? This is where a message broker comes in.
 
-!["Separation of each process in ETL."](/message-broker-in-etl-pipeline/3.svg)
+!["Separation of each process in ETL."](/message-broker-in-etl-pipeline/3.png)
 
 ---
 
@@ -40,7 +40,7 @@ A consumer on the other hand in this context is a daemon process that listens to
 
 For this example, I made all the processes daemons. I prefer it that way, you could opt to make the extract process as the scheduled script producer instead of a worker daemon. In the architecture diagram below, I created a scheduled launcher script that produces the first message to be given to the extraction worker. The extraction worker will then produce a message for the transformation worker sending its artifacts. Lastly, it makes sense the loader is just a consumer since it's the last step of which the message is produced by the transformation worker.
 
-!["Simple ETL architecture with a message broker."](/message-broker-in-etl-pipeline/4.svg)
+!["Simple ETL architecture with a message broker."](/message-broker-in-etl-pipeline/4.png)
 
 ---
 
@@ -48,10 +48,10 @@ We can scale the individual services to however we want without worrying about c
 
 We achieved communication across services through the message broker. You can imagine such architecture can also be used among microservices or other event-based architectures. We can take advantage of the fact that the ETL in this context can handle on-demand requests along with scheduled requests prompted by the launcher paradigm I introduced below because all we have to do, is produce a message to start the whole pipeline.
 
-!["Increasing the scale per ETL process with a message broker."](/message-broker-in-etl-pipeline/5.svg)
+!["Increasing the scale per ETL process with a message broker."](/message-broker-in-etl-pipeline/5.png)
 
 ---
 
 As a bonus, here's a possibility of what you could do with this kind of architecture. If for some requirement, you have a third party service that you need to contact to produce a certain data that needs time to finish, such as on-demand scraping of specific social media account, and cybersecurity evaluation of a domain, etc. You might want this to be fully automated to be integrated with your ETL process in addition to whatever scheduled scans you would have from the data source.
 
-!["An example of a complete web app architecture with on-demand ETL."](/message-broker-in-etl-pipeline/6.svg)
+!["An example of a complete web app architecture with on-demand ETL."](/message-broker-in-etl-pipeline/6.png)

@@ -18,13 +18,13 @@ If my application makes sense to be a purely client-side application especially 
 
 A pure client-side solution can mean many things for your application. The user will only receive a nearly empty index.html (by default) at first and only when the browser downloaded the script where React resides, only then when your actual application will be seen and interactable. This can impact your SEO as initially, crawlers won't be able to see your site! But according to some articles, Google crawlers try their best to render your application's javascript but if you want to make these robots' lives easier, this shouldn't be your chosen solution. This is the client-side rendering (CSR)  in the world of frontend delivery! It is best described below.
 
-!["CSR Lifecycle"](/create-react-app-experiences-and-pains/1.svg)
+!["CSR Lifecycle"](/create-react-app-experiences-and-pains/1.png)
 
 This may impact your UX in ways that the user will see content later than usual since the first paint is just a blank page. If not careful, we might cause a sudden paint of visible content which is just a downright bad experience. Not to mention, this will heavily affect the users with less than ideal internet and/or uses mobile data. You can see this effect for yourself! Try and run chrome developer tools and choose a network of fast 3G or slow 3G. 
 
 But! There's a way around this pure CSR route. You can create a server-side rendered (SSR) solution using node backend frameworks like Express serving your react app project where the strategy would be is to generate the first state view of your main application using the handy 'renderToString' function of the ReactDOM module. This way we could generate the HTML page on request so when it reaches a user, an initial view can be seen immediately. Only when the javascript is downloaded where React will hydrate itself and make the whole application interactable. This might not be as straightforward as it seems as you also need to worry about stylesheets, meta information through React Helmet among other concerns since you will be doing this from scratch. This is summarized below.
 
-!["SSR Lifecycle"](/create-react-app-experiences-and-pains/2.svg)
+!["SSR Lifecycle"](/create-react-app-experiences-and-pains/2.png)
 
 Another thing I like about this paradigm is that routing is very straightforward with react-router-dom which is highly recommended as your goto router solution. The main app contains (ideally) all the next-level routes your application will contain. This makes it much simpler to deploy behind reverse proxies as well. Not to mention, you can easily configure the root route of CRA using the env variable of PUBLIC_URL. This is handy if you have an existing website and only want a specific route to host the React website, but this is another architecture problem entirely.  An example code is shown below highlighting the homepage, about page and the contact page.
 

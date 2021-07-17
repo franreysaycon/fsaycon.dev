@@ -90,7 +90,7 @@ On the code above, we could guess how Next generates our static content. `getSta
 
 This process is summarized in the image below. All of this magic happens at build time! (Isn't it amazing? but of course, as disclaimed earlier, it might not be ideal for bigger blogs since your build incrementally gets slower as more blogs are created.)
 
-!["Sample NextJS Static Generation"](/how-i-built-my-blog-with-nextjs/1.svg)
+!["Sample NextJS Static Generation"](/how-i-built-my-blog-with-nextjs/1.png)
 
 Take note there are more steps behind the scenes in everything described in the diagram. What's important is you understand how the lifecycle works in a high level. Awesome! Only a few more steps. From this, you should be able to imagine how you would do the blog.
 

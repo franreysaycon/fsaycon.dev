@@ -22,7 +22,7 @@ In React, it is recommended that we group functionality into components rather t
 
 Instead of thinking in formats, you think in components. A button component contains its style (highly recommend to do CSS in JS), functionality (the javascript code), and structure ( HTML conveniently described using JSX). With this, we enforce brand consistency and more importantly, we have a handy reusable, style-independent, and functional ( if you did it right ) component you can use anywhere in your application.
 
-!["Non-component way vs component way"](/practices-to-consider-in-a-react-project/1.svg)
+!["Non-component way vs component way"](/practices-to-consider-in-a-react-project/1.png)
 
 Lastly, we explore the bane of a developer's existence, the folder structure. I don't know why this causes a lot of headaches and debates on the internet. I, on the other hand, follow five simple rules.
 
