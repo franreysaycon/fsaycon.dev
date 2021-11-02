@@ -9,10 +9,13 @@
     "lint-staged": "lint-staged"
   },
   "dependencies": {
+    "@stitches/react": "^1.2.5",
     "next": "12.0.2",
     "next-mdx-remote": "^3.0.7",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "typeface-abril-fatface": "^1.1.13",
+    "typeface-quattrocento-sans": "^1.1.13"
   },
   "devDependencies": {
     "@types/react": "^17.0.33",

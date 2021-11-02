@@ -7,7 +7,6 @@ module.exports = {
   extends: [
     "next/core-web-vitals",
     "plugin:react/recommended",
-    "plugin:mdx/recommended",
     "standard",
     "prettier"
   ],
@@ -32,4 +31,10 @@ module.exports = {
     },
     "mdx/code-blocks": true,
   },
+  overrides: [
+    {
+      files: ["*.md", "*.mdx"],
+      extends: ["plugin:mdx/recommended"]
+    }
+  ]
 }
