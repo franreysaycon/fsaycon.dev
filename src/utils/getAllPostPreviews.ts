@@ -3,7 +3,7 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 
-function getAllPostPreviews(): BlogPreview[] {
+const getAllPostPreviews = (): BlogPreview[] => {
   const postsDir = path.join(process.cwd(), "src", "posts")
   const posts = fs.readdirSync(postsDir)
 

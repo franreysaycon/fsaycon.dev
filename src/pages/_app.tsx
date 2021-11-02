@@ -15,7 +15,7 @@ const globalStyles = stitches.globalCss({
   },
 })
 
-function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }) => {
   globalStyles()
 
   return <Component {...pageProps} />
