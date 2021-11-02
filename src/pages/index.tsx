@@ -1,34 +1,19 @@
+import { GetStaticProps } from "next"
 import React from "react"
-import matter from "gray-matter"
-import { serialize } from "next-mdx-remote/serialize"
-import { MDXRemote } from "next-mdx-remote"
-import path from "path"
-import fs from "fs"
-import Header from "../components/Header"
+import getAllPostPreviews from "../utils/getAllPostPreviews"
 
-const components = {
-  ...Header,
+const Homepage = ({ previews }) => {
+  return <></>
 }
 
-const Home = ({ source, data }) => (
-  <MDXRemote {...source} components={components} />
-)
-
-export const getStaticProps = async () => {
-  const fileContents = fs.readFileSync(
-    path.join(process.cwd(), "src/posts/index.mdx"),
-    "utf8"
-  )
-  const { data, content } = matter(fileContents)
-
-  const source = await serialize(content, { scope: data })
+export const getStaticProps: GetStaticProps = () => {
+  const previews = getAllPostPreviews()
 
   return {
     props: {
-      data,
-      source,
+      previews,
     },
   }
 }
 
-export default Home
+export default Homepage
