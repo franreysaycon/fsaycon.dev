@@ -1,6 +1,6 @@
 import { createStitches } from "@stitches/react"
 
-export const { styled, css, globalCss, getCssText } = createStitches({
+const stitches = createStitches({
   media: {
     bp1: "(min-width: 320px)",
     bp2: "(min-width: 768px)",
@@ -47,3 +47,5 @@ export const { styled, css, globalCss, getCssText } = createStitches({
     transitions: {},
   },
 })
+
+export default stitches

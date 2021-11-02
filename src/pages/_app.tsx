@@ -1,9 +1,9 @@
 import React from "react"
-import { globalCss } from "../stitches"
+import stitches from "../stitches"
 import "typeface-abril-fatface"
 import "typeface-quattrocento-sans"
 
-const globalStyles = globalCss({
+const globalStyles = stitches.globalCss({
   "*": { boxSizing: "border-box" },
   "*:after": { boxSizing: "border-box" },
   "*:before": { boxSizing: "border-box" },
