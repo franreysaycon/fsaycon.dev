@@ -13,6 +13,12 @@ const globalStyles = stitches.globalCss({
     "@bp1": { fontSize: "calc(16px + 6 * ((100vw - 320px) / 704))" },
     "@bp3": { fontSize: "24px" },
   },
+  h1: { margin: 0 },
+  h2: { margin: 0 },
+  h3: { margin: 0 },
+  h4: { margin: 0 },
+  h5: { margin: 0 },
+  h6: { margin: 0 },
 })
 
 const MyApp = ({ Component, pageProps }) => {

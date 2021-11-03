@@ -12,8 +12,13 @@ const getAllPostPreviews = (): BlogPreview[] => {
     const { data } = matter(mdxFile)
     const slug = post.replace(".mdx", "")
 
+    const matterData = {
+      ...(data as BlogMatterData),
+      tags: data.tags ? data.tags.split(",") : [],
+    }
+
     return {
-      matterData: data as BlogMatterData,
+      matterData,
       slug,
     }
   })

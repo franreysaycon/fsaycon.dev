@@ -16,10 +16,10 @@ const BlogPage = ({ content }) => {
   return <MDXRemote {...content} components={components} />
 }
 
-export const getStaticProps: GetStaticProps<unknown, BlogPageParams> = ({
+export const getStaticProps: GetStaticProps<unknown, BlogPageParams> = async ({
   params,
 }) => {
-  const mdxPost = getPostBySlug(params.slug)
+  const mdxPost = await getPostBySlug(params.slug)
 
   return {
     props: {

@@ -6,11 +6,6 @@ const Fold = stitches.styled("div", {
   padding: "0px $rg",
   width: "100%",
   margin: "0px auto",
-  "> *": {
-    "+ *": {
-      marginTop: "$sm",
-    },
-  },
 })
 
 export default Fold
