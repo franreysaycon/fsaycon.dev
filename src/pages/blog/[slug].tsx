@@ -5,6 +5,13 @@ import Header from "../../components/Header"
 import getPostBySlug from "../../utils/getPostBySlug"
 import { ParsedUrlQuery } from "querystring"
 import getAllSlugs from "../../utils/getAllSlugs"
+import Head from "next/head"
+import { BlogPost } from "../../utils/blog"
+import Page from "../../components/Page"
+import Fold from "../../components/Fold"
+import stitches from "../../stitches"
+
+type BlogPageT = BlogPost
 
 interface BlogPageParams extends ParsedUrlQuery {
   slug: string
@@ -12,9 +19,29 @@ interface BlogPageParams extends ParsedUrlQuery {
 
 const components = { ...Header }
 
-const BlogPage = ({ content }) => {
-  return <MDXRemote {...content} components={components} />
-}
+const Duration = stitches.styled("span", {
+  fontStyle: "italic",
+})
+
+const Author = stitches.styled("span", {
+  fontWeight: "bold",
+})
+
+const BlogPage = ({ content, matterData }: BlogPageT) => (
+  <Page>
+    <Head>
+      <title>FSAYCON.DEV: {matterData.title}</title>
+    </Head>
+    <Fold>
+      <Header.h2>{matterData.title}</Header.h2>
+      <div>
+        <Author>by Franrey Saycon</Author> - {matterData.date} (&nbsp;
+        <Duration>{matterData.duration} read</Duration> )
+      </div>
+      <MDXRemote {...content} components={components} />
+    </Fold>
+  </Page>
+)
 
 export const getStaticProps: GetStaticProps<unknown, BlogPageParams> = async ({
   params,

@@ -10,7 +10,7 @@ const getAllPostPreviews = (): BlogPreview[] => {
   return posts.map((post) => {
     const mdxFile = fs.readFileSync(path.join(postsDir, post))
     const { data } = matter(mdxFile)
-    const slug = post.replace(".mdx", "")
+    const slug = `/blog/${post.replace(".mdx", "")}`
 
     const matterData = {
       ...(data as BlogMatterData),

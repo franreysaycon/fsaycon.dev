@@ -10,6 +10,7 @@ import Image from "next/image"
 import { BlogPreview } from "../utils/blog"
 import MainTag from "../Homepage/MainTag"
 import Head from "next/head"
+import Link from "next/link"
 
 const appear = stitches.keyframes({
   "0%": { transform: "translate(0px, 30px)", opacity: 0 },
@@ -126,17 +127,19 @@ const Homepage = ({ previews }: HomepageT) => {
       </Hero>
       <PreviewContainer>
         {previews.map(({ matterData, slug }) => (
-          <Preview key={slug}>
-            <MainTag tag={matterData.mtag} />
-            <Header.h3>{matterData.title}</Header.h3>
-            <span>{matterData.description}</span>
-            <TagContainer>
-              <>Tags:&nbsp;</>
-              {matterData.tags.map((t) => (
-                <Tag key={t}>{t}</Tag>
-              ))}
-            </TagContainer>
-          </Preview>
+          <Link key={slug} href={slug} passHref>
+            <Preview>
+              <MainTag tag={matterData.mtag} />
+              <Header.h3>{matterData.title}</Header.h3>
+              <span>{matterData.description}</span>
+              <TagContainer>
+                <>Tags:&nbsp;</>
+                {matterData.tags.map((t) => (
+                  <Tag key={t}>{t}</Tag>
+                ))}
+              </TagContainer>
+            </Preview>
+          </Link>
         ))}
       </PreviewContainer>
     </Page>

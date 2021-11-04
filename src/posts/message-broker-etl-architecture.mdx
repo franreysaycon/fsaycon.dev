@@ -1,0 +1,46 @@
+---
+title: "Message Broker ETL Pipeline"
+date: "2021-01-31"
+duration: "10 minutes"
+mtag: software architecture
+tags: "ETL, Data Engineering "
+description: "Explore with me on the role of a message broker in an ETL pipeline. Let's learn how we could scale our data workers in this article."
+---
+
+One of the demands of maintaining an ETL pipeline is to address the scale to efficiently handle the load an organization needs. Dependent on the volume of the data, especially in the world of big data, extraction, transformation, and loading of this data could take several days of which is most likely not ideal in the context of growth. Not to mention, there are use cases where this process must be done on-demand as users use your applications especially if we are trying to form an accurate data set of or for your users. Of course, in this article, I won't be assuming you have a supercomputer that makes these concerns a bit less daunting. Let's try to improve our pipelines through software architecture.
+
+Let's go through the journey of designing your ETL pipeline.
+
+Let's say, we created one script for the whole ETL process and it's just scheduled through a cron or using a workflow manager tools like Airflow to schedule the run of these scripts. This is described by the image down below. For this article, I won't be considering workflow manager tools' ability to scale your pipelines but rather provide another perspective that worked in my experience.
+
+---
+
+For simple datasets, one script is sufficient especially if the volume of data is in the realm of a few thousand. As long as, you practice proper bulk practices in the loading phases of your script, it's enough of an optimization. You may also opt to create a pre-processing step before the start of the ETL process to control the population in every bulk load in each iteration as unnecessarily large bulks tend to bottleneck your operations.
+
+To allow parallelism, you may practice replication. It follows we create some sort of configuration management per replication to avoid processing similar bulks of data. There are other ways to make this replication much more robust with a single script but we won't be exploring those options for this article. Let's keep it simple. These replications will be running in parallel on every defined schedule in your method of choice.
+
+---
+
+The above implementation might be enough for a lot of cases but what if we want to scale the individual processes of the script? You might want to do this especially if one of the processes causes a bottleneck and the others are fairly straightforward. Separation of these processes will enable a much more stable software ecosystem, introduce lesser coupling among the workers derived from the processes involved in your pipeline, and follows the principle of single responsibility which brings good benefits for future onboarding and development operations. Scaling loaders specifically, as an example, would enable you to take advantage of the allowed concurrent connections in a database or cloud storage service.
+
+However, for this to be able to work, we would need a way for these workers to communicate to each other. This just becomes more complicated if these workers are scaled differently. How will we know which workers are free? How will we manage the activation of every worker? What if one service suddenly broke down? This is where a message broker comes in.
+
+---
+
+A message broker is a software that enables applications, systems, and services to communicate with each other and exchange information. To have a better appreciation of the role of this software in applications, let's take a look at the design pattern it introduces.
+
+Let's define three terms first, producer, consumer, and queues. A producer is in charge of producing a message for the message broker with the information of where it should go, what data it wants to be sent, as well as how it will be delivered. Once sent to a message broker, it will determine on which queues the message should be pushed. Queues are ordered collections of messages that are managed and defined in the broker.
+
+A consumer on the other hand in this context is a daemon process that listens to a specific queue. If a producer sent a message to a queue that a consumer is listening to, that specific consumer will receive the said message of which when acknowledged, the broker will dequeue or remove the message from the queue otherwise dependent on the instructions for the message it will discard it or requeue it to the same or another queue.
+
+For this example, I made all the processes daemons. I prefer it that way, you could opt to make the extract process as the scheduled script producer instead of a worker daemon. In the architecture diagram below, I created a scheduled launcher script that produces the first message to be given to the extraction worker. The extraction worker will then produce a message for the transformation worker sending its artifacts. Lastly, it makes sense the loader is just a consumer since it's the last step of which the message is produced by the transformation worker.
+
+---
+
+We can scale the individual services to however we want without worrying about coupling as everything is separate. Because the workers in this context can only consume one message in every acknowledgment, you can imagine that messages just pile up until a worker consumes them making it possible for you to replicate whichever worker you want on-demand without worrying about integrity. Message brokers, like RabbitMQ, takes care of monitoring as well so you can make these scale decisions. Often, these message broker software also has a fail-safe to make sure when this broker service goes down, it'll save the messages that were not consumed in their respective queues, giving you the confidence to fail.
+
+We achieved communication across services through the message broker. You can imagine such architecture can also be used among microservices or other event-based architectures. We can take advantage of the fact that the ETL in this context can handle on-demand requests along with scheduled requests prompted by the launcher paradigm I introduced below because all we have to do, is produce a message to start the whole pipeline.
+
+---
+
+As a bonus, here's a possibility of what you could do with this kind of architecture. If for some requirement, you have a third party service that you need to contact to produce a certain data that needs time to finish, such as on-demand scraping of specific social media account, and cybersecurity evaluation of a domain, etc. You might want this to be fully automated to be integrated with your ETL process in addition to whatever scheduled scans you would have from the data source.
