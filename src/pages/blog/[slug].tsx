@@ -1,15 +1,16 @@
 import React from "react"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { MDXRemote } from "next-mdx-remote"
-import Header from "../../components/Header"
+import HN from "../../common/HN"
 import getPostBySlug from "../../utils/getPostBySlug"
 import { ParsedUrlQuery } from "querystring"
 import getAllSlugs from "../../utils/getAllSlugs"
 import Head from "next/head"
 import { BlogPost } from "../../utils/blog"
-import Page from "../../components/Page"
-import Fold from "../../components/Fold"
+import Page from "../../common/Page"
+import Fold from "../../common/Fold"
 import stitches from "../../stitches"
+import Image from "../../Blog/Image"
 
 type BlogPageT = BlogPost
 
@@ -17,7 +18,7 @@ interface BlogPageParams extends ParsedUrlQuery {
   slug: string
 }
 
-const components = { ...Header }
+const components = { ...HN, img: Image }
 
 const Duration = stitches.styled("span", {
   fontStyle: "italic",
@@ -27,19 +28,30 @@ const Author = stitches.styled("span", {
   fontWeight: "bold",
 })
 
+const Container = stitches.styled(Fold, {
+  marginTop: "$rg",
+  "> *": {
+    "+ *": {
+      marginTop: "$xxs",
+    },
+  },
+})
+
 const BlogPage = ({ content, matterData }: BlogPageT) => (
   <Page>
     <Head>
       <title>FSAYCON.DEV: {matterData.title}</title>
     </Head>
-    <Fold>
-      <Header.h2>{matterData.title}</Header.h2>
+    <Container>
+      <HN.h2>{matterData.title}</HN.h2>
       <div>
         <Author>by Franrey Saycon</Author> - {matterData.date} (&nbsp;
         <Duration>{matterData.duration} read</Duration> )
       </div>
-      <MDXRemote {...content} components={components} />
-    </Fold>
+      <article>
+        <MDXRemote {...content} components={components} />
+      </article>
+    </Container>
   </Page>
 )
 

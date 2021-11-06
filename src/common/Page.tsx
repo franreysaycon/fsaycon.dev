@@ -1,7 +1,7 @@
 import React from "react"
 import stitches from "../stitches"
 
-const Container = stitches.styled("div", {
+const Container = stitches.styled("main", {
   display: "block",
   minHeight: "100vh",
   fontFamily: "$quattrocentroSans",

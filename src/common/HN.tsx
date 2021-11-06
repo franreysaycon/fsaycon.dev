@@ -2,42 +2,48 @@ import { StyledComponent } from "@stitches/react/types/styled-component"
 import stitches from "../stitches"
 
 const H1 = stitches.styled("h1", {
-  fontSize: "$xxl",
+  fontSize: "$xl",
   fontFamily: "$abrilFatface",
-  color: "$header",
+  color: "$headerText",
+  lineHeight: "1",
 })
 
 const H2 = stitches.styled("h2", {
-  fontSize: "$xl",
+  fontSize: "$lg",
   fontFamily: "$abrilFatface",
-  color: "$header",
+  color: "$headerText",
+  lineHeight: "1",
 })
 
 const H3 = stitches.styled("h3", {
-  fontSize: "$lg",
+  fontSize: "$md",
   fontFamily: "$abrilFatface",
-  color: "$header",
+  color: "$headerText",
+  lineHeight: "1",
 })
 
 const H4 = stitches.styled("h4", {
-  fontSize: "$md",
+  fontSize: "$rg",
   fontFamily: "$abrilFatface",
-  color: "$header",
+  color: "$headerText",
+  lineHeight: "1",
 })
 
 const H5 = stitches.styled("h5", {
-  fontSize: "$rg",
+  fontSize: "$sm",
   fontFamily: "$abrilFatface",
-  color: "$header",
+  color: "$headerText",
+  lineHeight: "1",
 })
 
 const H6 = stitches.styled("h6", {
-  fontSize: "$sm",
+  fontSize: "$xs",
   fontFamily: "$abrilFatface",
-  color: "$header",
+  color: "$headerText",
+  lineHeight: "1",
 })
 
-const Header: Record<string, StyledComponent<any>> = {
+const HN: Record<string, StyledComponent<any>> = {
   h1: H1,
   h2: H2,
   h3: H3,
@@ -46,4 +52,4 @@ const Header: Record<string, StyledComponent<any>> = {
   h6: H6,
 }
 
-export default Header
+export default HN

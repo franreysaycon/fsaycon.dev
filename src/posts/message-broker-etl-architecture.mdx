@@ -13,6 +13,8 @@ Let's go through the journey of designing your ETL pipeline.
 
 Let's say, we created one script for the whole ETL process and it's just scheduled through a cron or using a workflow manager tools like Airflow to schedule the run of these scripts. This is described by the image down below. For this article, I won't be considering workflow manager tools' ability to scale your pipelines but rather provide another perspective that worked in my experience.
 
+!["Simple one script architecture."](/message-broker-etl-architecture/1.png?w=80)
+
 ---
 
 For simple datasets, one script is sufficient especially if the volume of data is in the realm of a few thousand. As long as, you practice proper bulk practices in the loading phases of your script, it's enough of an optimization. You may also opt to create a pre-processing step before the start of the ETL process to control the population in every bulk load in each iteration as unnecessarily large bulks tend to bottleneck your operations.

@@ -1,6 +1,6 @@
 import stitches from "../stitches"
 
-const Fold = stitches.styled("div", {
+const Fold = stitches.styled("section", {
   display: "block",
   maxWidth: "1200px",
   padding: "0px $rg",

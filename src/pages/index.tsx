@@ -1,8 +1,8 @@
 import { GetStaticProps } from "next"
 import React from "react"
-import Fold from "../components/Fold"
-import Header from "../components/Header"
-import Page from "../components/Page"
+import Fold from "../common/Fold"
+import HN from "../common/HN"
+import Page from "../common/Page"
 import stitches from "../stitches"
 import getAllPostPreviews from "../utils/getAllPostPreviews"
 import Cube from "../img/cube.png"
@@ -26,19 +26,19 @@ const Hero = stitches.styled(Fold, {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  height: "30rem",
+  height: "20rem",
   fontSize: "$lg",
   fontFamily: "$quattrocentroSans",
   flexDirection: "column",
   textAlign: "center",
   lineHeight: "0.95",
   "> *": {
+    animation: `${appear} 0.5s ease-in`,
     "+ *": {
       marginTop: "$sm",
     },
   },
   marginBottom: "$lg",
-  animation: `${appear} 0.5s ease-in`,
 })
 
 const PreviewContainer = stitches.styled(Fold, {
@@ -79,8 +79,8 @@ const hoverAnimation = stitches.keyframes({
 
 const CubeContainer = stitches.styled("div", {
   display: "block",
-  width: "15rem",
-  height: "15rem",
+  width: "12rem",
+  height: "12rem",
   animation: `${hoverAnimation} 1s ease-in 0s alternate infinite none running`,
 })
 
@@ -92,12 +92,6 @@ const TagContainer = stitches.styled("div", {
       marginLeft: "$xxs",
     },
   },
-})
-
-const Tag = stitches.styled("span", {
-  backgroundColor: "$tag",
-  padding: "5px",
-  borderRadius: "10px",
 })
 
 interface HomepageT {
@@ -122,7 +116,7 @@ const Homepage = ({ previews }: HomepageT) => {
             placeholder="blur"
           />
         </CubeContainer>
-        <Header.h1>Adventures with code.</Header.h1>
+        <HN.h1>Adventures with code</HN.h1>
         <span>Franrey Anthony S. Saycon</span>
       </Hero>
       <PreviewContainer>
@@ -130,13 +124,11 @@ const Homepage = ({ previews }: HomepageT) => {
           <Link key={slug} href={slug} passHref>
             <Preview>
               <MainTag tag={matterData.mtag} />
-              <Header.h3>{matterData.title}</Header.h3>
+              <HN.h3>{matterData.title}</HN.h3>
               <span>{matterData.description}</span>
               <TagContainer>
-                <>Tags:&nbsp;</>
-                {matterData.tags.map((t) => (
-                  <Tag key={t}>{t}</Tag>
-                ))}
+                <strong>Tags:&nbsp;</strong>
+                {matterData.tags.join(", ")}
               </TagContainer>
             </Preview>
           </Link>
