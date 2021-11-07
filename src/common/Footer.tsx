@@ -45,8 +45,10 @@ const Footer = () => (
   <Container>
     <MarginContainer>
       <div>
-        Made with NextJS + Stitches. <FaRocket color="#EE9C0F" size="15px" />
+        Made with NextJS + Stitches.
+        <FaRocket color="#EE9C0F" size="15px" />
       </div>
+      <div>PS: More content to come I&apos;m doing a migration.</div>
       <strong>Want to reach out to me?</strong>
       <IconContainer>
         <a

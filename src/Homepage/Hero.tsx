@@ -43,8 +43,7 @@ const Hero = () => (
   <Container>
     <CubeContainer>
       <img
-        // @ts-ignore
-        src={import("../img/cube.png")}
+        src="/cube.png"
         alt="Floating cube in hero section"
         width="100%"
         height="100%"

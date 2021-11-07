@@ -30,7 +30,6 @@ const Preview = stitches.styled("div", {
   height: "15rem",
   boxShadow: "1px 1px 5px rgba(0,0,0,0.5)",
   fontFamily: "$quattrocentroSans",
-  textAlign: "justify",
   padding: "$rg",
   lineHeight: "0.95",
   "> *": {
