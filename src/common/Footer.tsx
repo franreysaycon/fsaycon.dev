@@ -20,7 +20,6 @@ const MarginContainer = stitches.styled("div", {
   flexDirection: "column",
   fontFamily: "$quattrocentroSans",
   fontSize: "$sm",
-  fontWeight: "bold",
 })
 
 const IconContainer = stitches.styled("div", {
@@ -46,9 +45,9 @@ const Footer = () => (
   <Container>
     <MarginContainer>
       <div>
-        Made with NextJS + Stitches. <FaRocket color="red" />
+        Made with NextJS + Stitches. <FaRocket color="#EE9C0F" size="15px" />
       </div>
-      <div>Want to reach out to me?</div>
+      <strong>Want to reach out to me?</strong>
       <IconContainer>
         <a
           href="https://www.linkedin.com/in/fssaycon/"

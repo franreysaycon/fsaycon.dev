@@ -43,7 +43,7 @@ const BlogPage = ({ content, matterData }: BlogPageT) => (
       <title>FSAYCON.DEV: {matterData.title}</title>
     </Head>
     <Container>
-      <HN.h2>{matterData.title}</HN.h2>
+      <HN.h1>{matterData.title}</HN.h1>
       <div>
         <Author>by Franrey Saycon</Author> - {matterData.date} (&nbsp;
         <Duration>{matterData.duration} read</Duration> )
