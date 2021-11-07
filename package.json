@@ -2,12 +2,15 @@
   "name": "fsaycon-mdx",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "deploy": "yarn build && yarn export",
+    "dev": "next dev",
     "export": "next export",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "lint": "next lint",
+    "postbuild": "next-sitemap --config next-sitemap-config.js",
+    "postExport": "node createSitemap.js",
+    "start": "next start"
   },
   "dependencies": {
     "@stitches/react": "^1.2.5",
@@ -38,6 +41,7 @@
     "imagemin-optipng": "^8.0.0",
     "lint-staged": "^11.2.6",
     "next-optimized-images": "^2.6.2",
+    "next-sitemap": "^1.6.203",
     "prettier": "^2.4.1",
     "typescript": "^4.4.4"
   },
