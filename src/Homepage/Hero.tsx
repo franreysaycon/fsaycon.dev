@@ -13,18 +13,16 @@ const Container = stitches.styled(Fold, {
   alignItems: "center",
   justifyContent: "center",
   height: "20rem",
-  fontSize: "$lg",
-  fontFamily: "$quattrocentroSans",
   flexDirection: "column",
   textAlign: "center",
   lineHeight: "0.95",
   "> *": {
     animation: `${appear} 0.5s ease-in`,
-    "+ *": {
-      marginTop: "$sm",
-    },
   },
-  marginBottom: "$lg",
+  marginBottom: "$xl",
+  "@bp2": {
+    marginBottom: "$lg",
+  },
 })
 
 const hoverAnimation = stitches.keyframes({
@@ -39,6 +37,18 @@ const CubeContainer = stitches.styled("div", {
   animation: `${hoverAnimation} 1s ease-in 0s alternate infinite none running`,
 })
 
+const SpielContainer = stitches.styled("div", {
+  display: "inline-flex",
+  margin: "0 auto",
+  flexDirection: "column",
+})
+
+const NameContainer = stitches.styled("div", {
+  fontSize: "$rg",
+  fontFamily: "$quattrocentroSans",
+  fontStyle: "italic",
+})
+
 const Hero = () => (
   <Container>
     <CubeContainer>
@@ -49,8 +59,10 @@ const Hero = () => (
         height="100%"
       />
     </CubeContainer>
-    <HN.h1>Adventures with code</HN.h1>
-    <span>Franrey Anthony S. Saycon</span>
+    <SpielContainer>
+      <HN.h1>Adventures with code</HN.h1>
+      <NameContainer>by Franrey Anthony S. Saycon</NameContainer>
+    </SpielContainer>
   </Container>
 )
 

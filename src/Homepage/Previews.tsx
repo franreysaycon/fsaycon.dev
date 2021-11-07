@@ -61,7 +61,7 @@ const Previews = ({ previews }: PreviewT) => (
       <Link key={slug} href={slug} passHref>
         <Preview>
           <MainTag tag={matterData.mtag} />
-          <HN.h3>{matterData.title}</HN.h3>
+          <HN.h2>{matterData.title}</HN.h2>
           <span>{matterData.description}</span>
           <TagContainer>
             <strong>Tags:&nbsp;</strong>
