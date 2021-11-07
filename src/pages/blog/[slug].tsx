@@ -12,7 +12,9 @@ import stitches from "../../stitches"
 import Image from "../../Blog/Image"
 import MetaHead from "../../common/MetaHead"
 
-type BlogPageT = BlogPost
+interface BlogPageT extends BlogPost {
+  slug: string
+}
 
 interface BlogPageParams extends ParsedUrlQuery {
   slug: string
@@ -37,12 +39,12 @@ const Container = stitches.styled(Fold, {
   },
 })
 
-const BlogPage = ({ content, matterData }: BlogPageT) => (
+const BlogPage = ({ content, matterData, slug }: BlogPageT) => (
   <Page>
     <MetaHead
       title={`FSAYCON.DEV: ${matterData.title}`}
       description={matterData.description}
-      link={matterData.slug}
+      link={slug}
       previewImage={matterData.smPreviewImage}
     />
     <Container>
@@ -66,6 +68,7 @@ export const getStaticProps: GetStaticProps<unknown, BlogPageParams> = async ({
   return {
     props: {
       ...mdxPost,
+      slug: `/blog/${params.slug}`,
     },
   }
 }

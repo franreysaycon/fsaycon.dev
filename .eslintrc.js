@@ -8,9 +8,9 @@ module.exports = {
     "next/core-web-vitals",
     "plugin:react/recommended",
     "standard",
-    "prettier"
+    "prettier",
   ],
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -24,6 +24,7 @@ module.exports = {
     "no-use-before-define": "off",
     "prettier/prettier": "warn",
     "react/prop-types": "off",
+    "@next/next/no-img-element": "off",
   },
   settings: {
     react: {
@@ -34,7 +35,7 @@ module.exports = {
   overrides: [
     {
       files: ["*.md", "*.mdx"],
-      extends: ["plugin:mdx/recommended"]
-    }
-  ]
+      extends: ["plugin:mdx/recommended"],
+    },
+  ],
 }

@@ -15,7 +15,6 @@ const getAllPostPreviews = (): BlogPreview[] => {
     const matterData = {
       ...(data as BlogMatterData),
       tags: data.tags ? data.tags.split(",") : [],
-      smPreviewImage: `${slug}/preview.png`,
     }
 
     return {

@@ -1,8 +1,6 @@
 import React from "react"
 import Fold from "../common/Fold"
 import stitches from "../stitches"
-import Image from "next/image"
-import Cube from "../img/cube.png"
 import HN from "../common/HN"
 
 const appear = stitches.keyframes({
@@ -44,14 +42,12 @@ const CubeContainer = stitches.styled("div", {
 const Hero = () => (
   <Container>
     <CubeContainer>
-      <Image
-        src={Cube}
+      <img
+        // @ts-ignore
+        src={import("../img/cube.png")}
         alt="Floating cube in hero section"
         width="100%"
         height="100%"
-        layout="responsive"
-        loading="eager"
-        placeholder="blur"
       />
     </CubeContainer>
     <HN.h1>Adventures with code</HN.h1>

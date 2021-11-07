@@ -10,9 +10,14 @@ const getPostBySlug = async (slug: string): Promise<BlogPost> => {
   const { data, content } = matter(mdxFile)
   const source = await serialize(content, { scope: data })
 
+  const matterData = {
+    ...(data as BlogMatterData),
+    smPreviewImage: `${slug}/preview.png`,
+  }
+
   return {
     content: source,
-    matterData: data as BlogMatterData,
+    matterData,
   }
 }
 
