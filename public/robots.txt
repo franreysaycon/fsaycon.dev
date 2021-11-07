@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: *
-
-# Host
-Host: https://fsaycon.dev
-
-# Sitemaps
-Sitemap: https://fsaycon.dev/sitemap.xml
