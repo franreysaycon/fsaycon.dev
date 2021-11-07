@@ -47,6 +47,7 @@ const NameContainer = stitches.styled("div", {
   fontSize: "$rg",
   fontFamily: "$quattrocentroSans",
   fontStyle: "italic",
+  alignSelf: "flex-end",
 })
 
 const Hero = () => (

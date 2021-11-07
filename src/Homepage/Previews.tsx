@@ -27,7 +27,7 @@ const PreviewContainer = stitches.styled(Fold, {
 const Preview = stitches.styled("div", {
   display: "flex",
   flexDirection: "column",
-  height: "15rem",
+  height: "13.5rem",
   boxShadow: "1px 1px 5px rgba(0,0,0,0.5)",
   fontFamily: "$quattrocentroSans",
   padding: "$rg",

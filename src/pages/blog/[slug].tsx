@@ -22,14 +22,6 @@ interface BlogPageParams extends ParsedUrlQuery {
 
 const components = { ...HN, img: Image }
 
-const Duration = stitches.styled("span", {
-  fontStyle: "italic",
-})
-
-const Author = stitches.styled("span", {
-  fontWeight: "bold",
-})
-
 const Container = stitches.styled(Fold, {
   marginTop: "$rg",
   "> *": {
@@ -50,8 +42,10 @@ const BlogPage = ({ content, matterData, slug }: BlogPageT) => (
     <Container>
       <HN.h1>{matterData.title}</HN.h1>
       <div>
-        <Author>by Franrey Saycon</Author> - {matterData.date} (&nbsp;
-        <Duration>{matterData.duration} read</Duration> )
+        <em>
+          <strong>by Franrey Saycon</strong>, {matterData.date} (
+          {matterData.duration} read)
+        </em>
       </div>
       <article>
         <MDXRemote {...content} components={components} />
