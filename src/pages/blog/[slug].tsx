@@ -5,12 +5,12 @@ import HN from "../../common/HN"
 import getPostBySlug from "../../utils/getPostBySlug"
 import { ParsedUrlQuery } from "querystring"
 import getAllSlugs from "../../utils/getAllSlugs"
-import Head from "next/head"
 import { BlogPost } from "../../utils/blog"
 import Page from "../../common/Page"
 import Fold from "../../common/Fold"
 import stitches from "../../stitches"
 import Image from "../../Blog/Image"
+import MetaHead from "../../common/MetaHead"
 
 type BlogPageT = BlogPost
 
@@ -39,9 +39,12 @@ const Container = stitches.styled(Fold, {
 
 const BlogPage = ({ content, matterData }: BlogPageT) => (
   <Page>
-    <Head>
-      <title>FSAYCON.DEV: {matterData.title}</title>
-    </Head>
+    <MetaHead
+      title={`FSAYCON.DEV: ${matterData.title}`}
+      description={matterData.description}
+      link={matterData.slug}
+      previewImage={matterData.smPreviewImage}
+    />
     <Container>
       <HN.h1>{matterData.title}</HN.h1>
       <div>

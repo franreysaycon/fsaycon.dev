@@ -15,6 +15,8 @@ export interface BlogMatterData {
   img: string
   mtag: MTag
   duration: string
+  smPreviewImage: string
+  slug: string
 }
 
 export interface BlogPreview {
