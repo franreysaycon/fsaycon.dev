@@ -18,8 +18,9 @@ const Code = ({ className, children }: CodeT) => {
       showLineNumbers={true}
       language={language}
       theme={zenburn}
-      wrapLines
       copy={true}
+      wrapLines={true}
+      codeBlock={true}
     />
   )
 }
