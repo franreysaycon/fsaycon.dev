@@ -11,6 +11,8 @@ import Fold from "../../common/Fold"
 import stitches from "../../stitches"
 import Image from "../../Blog/Image"
 import MetaHead from "../../common/MetaHead"
+import Code from "../../Blog/Code"
+import Anchor from "../../Blog/Anchor"
 
 interface BlogPageT extends BlogPost {
   slug: string
@@ -20,7 +22,7 @@ interface BlogPageParams extends ParsedUrlQuery {
   slug: string
 }
 
-const components = { ...HN, img: Image }
+const components = { ...HN, img: Image, code: Code, a: Anchor }
 
 const Container = stitches.styled(Fold, {
   marginTop: "$rg",

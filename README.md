@@ -1,6 +1,6 @@
 # FSAYCON.DEV - Personal Website of Franrey Saycon
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/9b7b8139-9333-4e78-b70b-26259036077f/deploy-status)](https://app.netlify.com/sites/kind-darwin-8469ed/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/15f7b1ab-fe6c-4ffa-ba99-af78f60e339c/deploy-status)](https://app.netlify.com/sites/musing-brown-168014/deploys)
 
 Break past your limits! Plus ultra! ✊
 

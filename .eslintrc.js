@@ -30,12 +30,18 @@ module.exports = {
     react: {
       version: "detect",
     },
-    "mdx/code-blocks": true,
   },
   overrides: [
     {
       files: ["*.md", "*.mdx"],
       extends: ["plugin:mdx/recommended"],
+      rules: {
+        "no-undef": "off",
+      },
+      settings: {
+        "mdx/code-blocks": true,
+        "mdx/language-mapper": {},
+      },
     },
   ],
 }

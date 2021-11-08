@@ -11,6 +11,7 @@ const stitches = createStitches({
       white: "#F8F4F9",
       orange: "#EE9C0F",
       black: "#373737",
+      purple: "#814D97",
 
       // elements
       bg: "$white",
