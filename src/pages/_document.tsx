@@ -12,42 +12,42 @@ export default class Document extends NextDocument {
             as="font"
             type="font/woff2"
             href="/fonts/abril-fatface/abril-fatface-latin-400.woff2"
-            crossOrigin="true"
+            crossOrigin="anonymous"
           />
           <link
             rel="preload"
             as="font"
             type="font/woff2"
             href="/fonts/quattrocento-sans/quattrocento-sans-latin-400.woff2"
-            crossOrigin="true"
+            crossOrigin="anonymous"
           />
           <link
             rel="preload"
             as="font"
             type="font/woff2"
             href="/fonts/quattrocento-sans/quattrocento-sans-latin-400italic.woff2"
-            crossOrigin="true"
+            crossOrigin="anonymous"
           />
           <link
             rel="preload"
             as="font"
             type="font/woff2"
             href="/fonts/quattrocento-sans/quattrocento-sans-latin-700.woff2"
-            crossOrigin="true"
+            crossOrigin="anonymous"
           />
           <link
             rel="preload"
             as="font"
             type="font/woff2"
             href="/fonts/quattrocento-sans/quattrocento-sans-latin-700italic.woff2"
-            crossOrigin="true"
+            crossOrigin="anonymous"
           />
           <link
             rel="preload"
             as="font"
             type="font/woff2"
             href="/fonts/quattrocento-sans/quattrocento-sans-latin-400.woff2"
-            crossOrigin="true"
+            crossOrigin="anonymous"
           />
           <style
             id="stitches"
