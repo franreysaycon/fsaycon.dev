@@ -89,6 +89,68 @@ const globalStyles = stitches.globalCss({
   h4: { margin: 0 },
   h5: { margin: 0 },
   h6: { margin: 0 },
+  "@font-face": [
+    {
+      fontFamily: "Abril Fatface",
+      fontStyle: "normal",
+      fontDisplay: "swap",
+      fontWeight: 400,
+      src: `
+      local('Abril Fatface Regular '),
+      local('Abril Fatface-Regular'),
+      url('/fonts/abril-fatface/abril-fatface-latin-400.woff2') format('woff2'),
+      url('/fonts/abril-fatface/abril-fatface-latin-400.woff') format('woff');
+    `,
+    },
+    {
+      fontFamily: "Quattrocento Sans",
+      fontStyle: "normal",
+      fontDisplay: "swap",
+      fontWeight: 400,
+      src: `
+      local('Quattrocento Sans Regular '),
+      local('Quattrocento Sans-Regular'),
+      url('/fonts/quattrocento-sans/quattrocento-sans-latin-400.woff2') format('woff2'),
+      url('/fonts/quattrocento-sans/quattrocento-sans-latin-400.woff') format('woff');
+    `,
+    },
+    {
+      fontFamily: "Quattrocento Sans",
+      fontStyle: "italic",
+      fontDisplay: "swap",
+      fontWeight: 400,
+      src: `
+      local('Quattrocento Sans Regular '),
+      local('Quattrocento Sans-Regular'),
+      url('/fonts/quattrocento-sans/quattrocento-sans-latin-400italic.woff2') format('woff2'),
+      url('/fonts/quattrocento-sans/quattrocento-sans-latin-400italic.woff') format('woff');
+    `,
+    },
+    {
+      fontFamily: "Quattrocento Sans",
+      fontStyle: "normal",
+      fontDisplay: "swap",
+      fontWeight: 700,
+      src: `
+      local('Quattrocento Sans Regular '),
+      local('Quattrocento Sans-Regular'),
+      url('/fonts/quattrocento-sans/quattrocento-sans-latin-700.woff2') format('woff2'),
+      url('/fonts/quattrocento-sans/quattrocento-sans-latin-700.woff') format('woff');
+    `,
+    },
+    {
+      fontFamily: "Quattrocento Sans",
+      fontStyle: "italic",
+      fontDisplay: "swap",
+      fontWeight: 700,
+      src: `
+      local('Quattrocento Sans Regular '),
+      local('Quattrocento Sans-Regular'),
+      url('/fonts/quattrocento-sans/quattrocento-sans-latin-700italic.woff2') format('woff2'),
+      url('/fonts/quattrocento-sans/quattrocento-sans-latin-700italic.woff') format('woff');
+    `,
+    },
+  ],
 })
 
 globalStyles()

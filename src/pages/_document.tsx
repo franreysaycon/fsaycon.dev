@@ -7,6 +7,42 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head>
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/abril-fatface/abril-fatface-latin-400.woff2"
+          />
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/quattrocento-sans/quattrocento-sans-latin-400.woff2"
+          />
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/quattrocento-sans/quattrocento-sans-latin-400italic.woff2"
+          />
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/quattrocento-sans/quattrocento-sans-latin-700.woff2"
+          />
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/quattrocento-sans/quattrocento-sans-latin-700italic.woff2"
+          />
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/quattrocento-sans/quattrocento-sans-latin-400.woff2"
+          />
           <style
             id="stitches"
             dangerouslySetInnerHTML={{ __html: stitches.getCssText() }}

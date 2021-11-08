@@ -1,6 +1,4 @@
 import React from "react"
-import "typeface-abril-fatface"
-import "typeface-quattrocento-sans"
 import Header from "../common/Header"
 import Footer from "../common/Footer"
 
