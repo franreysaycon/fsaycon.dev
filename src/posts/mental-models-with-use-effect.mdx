@@ -173,7 +173,7 @@ Render 2 (`number = 1`)
 Render 3 (`number = 2`)
 
 ```js
-[1] // [2] !== [1] (run the effect)
+[2] // [2] !== [1] (run the effect)
 ```
 
 Since we are talking about equality, it's a good note to remember that everything is still Javascript so we have to incorporate this fact into our mental model. Ever wonder why it's recommended to wrap functions defined in a component behind a `useCallback` if we intend it to be part of a `useEffect` dependency array as a best practice? It's because of how Javascript works and the fact that `useEffect` only does shallow equality checks.
