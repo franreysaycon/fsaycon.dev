@@ -178,7 +178,7 @@ Render 3 (`number = 2`)
 
 Since we are talking about equality, it's a good note to remember that everything is still Javascript so we have to incorporate this fact into our mental model. Ever wonder why it's recommended to wrap functions defined in a component behind a `useCallback` if we intend it to be part of a `useEffect` dependency array as a best practice? It's because of how Javascript works and the fact that `useEffect` only does shallow equality checks.
 
-I won't take a deep dive into this Javascript-specific concept. (This [course](https://justjavascript.com/) by Dan Abramov explains this well). In JS, objects' and functions' shallow equality is decided by reference regardless of the values inside. A new reference is created on every instantiation which would lead to inequality if different references were compared. Here are some examples visualizing the concept that was initially described.
+I won't take a deep dive into this Javascript-specific concept. (This [course](https://justjavascript.com/) by Dan Abramov explains this well). In JS, objects' and functions' equality is decided by reference regardless of the values inside. A new reference is created on every instantiation which would lead to inequality if different references were compared. Here are some examples visualizing the concept that was initially described.
 
 ```js
 {} === {} 
@@ -298,7 +298,7 @@ Consider a scenario of a component with three `useEffect` definitions. The menta
 
 !["useEffect: Shoebox Mental Model example"](/mental-models-with-use-effect/1.svg?w=90)
 
-Let's explore through some examples. Below is the `TickingComponent` before with some minor tweaks. I added a `console.log` inside the cleanup function to illustrate a somewhat tricky behavior to digest that we will expound soon. I highly suggest you run this on your own!
+Exploring further, let's go through some examples. Below is the `TickingComponent` before with some minor tweaks. I added a `console.log` inside the cleanup function to illustrate a somewhat tricky behavior to digest that we will expound soon. I highly suggest you run this on your own!
 
 ```jsx
 const TickingComponent = () => {
