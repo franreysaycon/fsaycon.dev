@@ -13,6 +13,7 @@ import Image from "../../Blog/Image"
 import MetaHead from "../../common/MetaHead"
 import Code from "../../Blog/Code"
 import Anchor from "../../Blog/Anchor"
+import moment from "moment"
 
 interface BlogPageT extends BlogPost {
   slug: string
@@ -33,6 +34,9 @@ const Container = stitches.styled(Fold, {
   },
 })
 
+const convertDate = (date: string) =>
+  moment(date, "YYYY-MM-DD").format("DD MMM YYYY")
+
 const BlogPage = ({ content, matterData, slug }: BlogPageT) => (
   <Page>
     <MetaHead
@@ -45,7 +49,7 @@ const BlogPage = ({ content, matterData, slug }: BlogPageT) => (
       <HN.h1>{matterData.title}</HN.h1>
       <div>
         <em>
-          <strong>by Franrey Saycon</strong>, {matterData.date} (
+          <strong>by Franrey Saycon</strong>, {convertDate(matterData.date)} (
           {matterData.duration} read)
         </em>
       </div>
