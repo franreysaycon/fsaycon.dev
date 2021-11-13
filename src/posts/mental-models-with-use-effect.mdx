@@ -298,7 +298,7 @@ Consider a scenario of a component with three `useEffect` definitions. The menta
 
 !["useEffect: Shoebox Mental Model example"](/mental-models-with-use-effect/1.svg?w=90)
 
-Let's explore through some examples. Backreading, you might have thought about the refactoring I did in the ticking component before to accommodate the state. I added a `console.log` inside the cleanup function to illustrate a somewhat tricky thing to digest. I highly suggest you run this on your own!
+Let's explore through some examples. Below is the `TickingComponent` before with some minor tweaks. I added a `console.log` inside the cleanup function to illustrate a somewhat tricky behavior to digest that we will expound soon. I highly suggest you run this on your own!
 
 ```jsx
 const TickingComponent = () => {
@@ -322,7 +322,9 @@ const TickingComponent = () => {
 }
 ```
 
-As you can see, it's important to know that the cleanup function contains the lexical scope of its render regardless of whether it's being called in succeeding renders. Again, we should think in renders as every effect is tied to one. (*mental model #1*). Let's break down the first three renders substituting the value of `number` at the current render.
+Observing the console prints, you will notice that the cleanup function ran before every succeeding effect doesn't have the value of the number of the current render. Why? JS fundamentals time!
+
+It's important to know that the cleanup function contains the lexical scope of its render regardless of whether it's being called in future renders. The cleanup function we placed in the shoebox under our mental model will always be of a previous render, never from the current one nor future ones. Again, we should think in renders as every effect is tied to one. (*mental model #1*). Let's break down the first three renders substituting the current value of `number` at every render.
 
 Render 1 ( `number = 0` )
 
@@ -380,9 +382,9 @@ useEffect(() => {
 }, [2, setNumber])
 ```
 
-We can deduce that the cleanup function on every tick will print `n-1` where n is the current value of the state number at any given render. It is recommended that we follow this pattern as much as possible if we intend to have a cleanup where every effect has one since it can be tricky if the cleanup is conditional which will be described in the next section.
+We can deduce that the cleanup function on every tick will print `n-1` where `n` is the current value of the state `number` at a given render. It is recommended that we follow this pattern as much as possible if we intend our code to be simpler and predictable. It can be tricky if the cleanup is conditional. To explore that, let's checkout a trickier example.
 
-Let's check out a trickier example. This component will tick to infinity with varying cleanup functions behind conditions on the second hook.
+The component below will tick to infinity with varying cleanup functions behind conditions on the second hook.
 
 ```jsx
 const TrickierCleanup = () => {
@@ -415,11 +417,13 @@ const TrickierCleanup = () => {
 }
 ```
 
-Doing the shoebox mental model up to 7 renders,
+To digest what's going on, let's do the shoebox mental model up to 7 renders,
 
 !["Shoebox Diagram for TrickierComponent"](/mental-models-with-use-effect/2.svg?w=90)
 
-It can be daunting I know, but if your code is patterned like the one above, you're probably doing something wrong. It's easier to imagine if every render where the effect will run has a corresponding clean up just like the first ticking example above. If you have to print the number on every even number and "hello" on every number divisible by 3 on cleanup, refactor it this way. 
+It can be daunting I know, but if your code is patterned like the one above, you're probably doing something wrong. It's easier to imagine if every render where the effect will run has a corresponding clean up just like the first ticking example above. 
+
+In the mission to make our lives easier, I highly suggest to refactor it this way.
 
 ```jsx
 const BetterCleanup = () => {
@@ -450,9 +454,9 @@ const BetterCleanup = () => {
 }
 ```
 
-We just have to refactor the check with `number % 3 === 0` to an `else if` to make sure we have the same behavior for `number = 0`. After the simple refactor, it should have the same `console.log` behavior as the previous one. The only difference is it's easier to understand since every succeeding effect after the first render has a cleanup. It makes things much more predictable and you only need to check the previous render.
+We just have to change the check with `number % 3 === 0` to an `else if` to make sure we have the same behavior for `number = 0`. After the simple refactor, it should have the same `console.log` behavior as the previous one. The only difference is it's easier to understand since every succeeding effect after the first render has a cleanup. It makes things much more predictable and you only need to check the previous render's state.
 
-The shoebox model for this will be below. Hopefully, you agree it's simpler than the first one. Take note of the `CLEANUP` function definition below.
+The shoebox model for this will be below. Hopefully, you agree it's simpler than the first one. Take note of the `CLEANUP` function used in the diagram.
 
 ```js
 const CLEANUP = (n) => {
