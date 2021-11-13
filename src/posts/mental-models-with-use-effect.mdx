@@ -324,11 +324,11 @@ const TickingComponent = () => {
 
 Observing the console prints, you will notice that the cleanup function ran before every succeeding effect doesn't have the value of the number of the current render. Why? JS fundamentals time!
 
-It's important to know that the cleanup function contains the lexical scope of its render regardless of whether it's being called in future renders. The cleanup function we placed in the shoebox under our mental model will always be of a previous render, never from the current one nor future ones. Again, we should think in renders as every effect is tied to one. (*mental model #1*). Let's break down the first three renders substituting the current value of `number` at every render.
+It's important to know that the cleanup function contains the lexical scope of its render regardless of whether it's being called in future renders. The cleanup function we placed in the shoebox under our mental model will always be of a previous render, never from the current one nor future ones. Again, we should think in renders as every effect is tied to one. (*mental model #1*). To better illustrate this point, let's break down the first three renders' `useEffect` substituting the current value of `number` at every render.
 
 Render 1 ( `number = 0` )
 
-```tsx
+```jsx
 useEffect(() => {
     	const tick = setTimeout(() => {
             if(0 < 10){
