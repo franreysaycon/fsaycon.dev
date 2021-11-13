@@ -1,0 +1,524 @@
+---
+date: "13 Nov. 2021"
+description: "Take a deep dive with me and explore a mental model to make our lives easier in dealing with the useEffect hook."
+duration: "20 minutes"
+mtag: frontend development
+tags: "React, Javascript, Hooks API"
+title: "Mental Models with useEffect"
+---
+
+The **useEffect** hook is known for running side-effects seemingly keeping track of values sent to its dependency arrays. 
+
+One way a developer might explain how `useEffect` works is given a set of dependencies, run the defined effect when a dependency changes as well as on mount. You may also return a cleanup function that will be called before every succeeding side effect and on unmounting. 
+
+Although, the explanation above may give an easy-to-understand mental model. It's incomplete at best and may give unnecessary frustrations in the future if we kept this statement as the foundation of our mental model when dealing with this hook.
+
+Let's challenge the statement above and observe what we see. 
+
+Here's a simple component with a ticking interval. We want an indication of the current number as well as an indication that the ticking is working printing the next number. Keep on ticking if the number is less than 10. *PS: Ignore the fact that the interval will never technically finish, coded it like this for demonstration's sake.*
+
+```jsx
+const TickingComponent = () => {
+    let number = 0
+    
+	useEffect(() => {
+    	const tick = setInterval(() => {
+            if(number < 10){
+                number+= 1
+                console.log(`Ticking and the next number is ${number}.`)
+            }
+        }, 1000)
+        
+        return () => {
+            clearInterval(tick)
+        }
+    }, [])
+    
+    useEffect(() => {
+        console.log(number)
+    }, [number])
+
+    return <div>The number is {number}.</div>
+}
+```
+
+So how many times do you think the `console.log(number)` will print? Even though, number there is not a state in React's paradigm. It's a valid Javascript variable that can be mutated wherein in this case we want to add one to it every second. 
+
+If you answered, 10. That's understandable given the statement described above. But if you decided to run it, it's only once! What do you think happened?
+
+Looking at it closely, you can see that the `<div>The number is {number}.</div>` only showed `"The number is 0."` even though ticking is still active and `number` is being mutated. So what should be our mental model here? It's easy. IF you read the React docs, specifically this line about `useEffect` - ``By using this Hook, you tell React that your component needs to do something after render.`` We can deduce that **effects come after a render**.
+
+## #1. Effects come after a render.
+
+It follows no effect will have any hopes of running if no render happens. Wonder why on component mount the effects run? It's because that's the first render.
+
+To fix the component above, all we have to do is change `number` to a state and refactor a little bit to make sure the intended effect is observed taking into account Javascript lexical scoping on every render. Since changes in the state will trigger a re-render, the component below should print `console.log(number)` ten times, `0-9`, as well as `Ticking and the next number, is [number]` alternating after the previous console where number is `1-10`. We can finally see the view is updated per tick as well which follows the effects will run respectively every tick.
+
+```jsx
+const TickingComponent = () => {
+    const [number, setNumber] = useState(0)
+    
+	useEffect(() => {
+    	const tick = setTimeout(() => {
+            if(number < 10){
+                setNumber(number + 1)
+               	console.log(`Ticking and the next number is ${number+1}.`)
+            }
+        }, 1000)
+        
+        return () => {
+            clearTimeout(tick)
+        }
+    }, [number, setNumber])
+    
+    useEffect(() => {
+        console.log(number)
+    }, [number])
+
+    return <div>The number is {number}.</div>
+}
+```
+
+It's also important we focus on the word **after**. Given the component below, which `console.log` will run first?
+
+```jsx
+const Component = () => {
+	const render = () => {
+		console.log("Hello!")
+		return <div>Hello</div>
+	}
+	
+	useEffect(() => {
+		console.log("Hi!")
+	}, [])
+	
+	return render()
+}
+```
+
+Given our mental model, it's easy to deduce that `Hello` will print first no matter how much we refresh the page or even if you define the function right after the useEffect definition. *ezpz right?*
+
+BONUS: if you change `number` to a reference. The same behavior, when the number is just a variable in scope, will be observed since reference changes don't trigger a re-render. *PS: The ticking will still continue though.*
+
+```jsx
+const TickingComponent = () => {
+    const number = useRef(0)
+    
+	useEffect(() => {
+    	const tick = setInterval(() => {
+            if(number.current < 10){
+                number.current += 1
+                console.log(`Ticking and the next number is ${number.current}.`)
+            }
+        }, 1000)
+        
+        return () => {
+            clearInterval(tick)
+        }
+    }, [])
+    
+    useEffect(() => {
+        console.log(number.current)
+    }, [number.current])
+
+    return <div>The number is {number.current}.</div>
+}
+```
+
+Note: The funny part is if you have `react-hooks/exhaustive-deps` lint active. It will give you a warning that mutable values are unnecessary as dependencies since they don't trigger a re-render! Awesome right? Make sure to have that rule active as it prevents pitfalls.
+
+---
+
+Since we know that effects are tied to renders, and renders are just function calls, we can easily deduce that dependency arrays are tied to the current lexical scope of the function (the functional component) when it was called for the respective render. So how do you think the hook decides if the effect should run? *ezpz*. **An effect will run if the dependency array is not equal to the dependency array of the previous render.** It follows if no dependency array was defined then the effect will always run after a render. (I don't recommend this unless you're sure.)
+
+## #2. **An effect will run if the dependency array is not equal to the dependency array of the previous render.** 
+
+```jsx
+const TickingComponent = () => {
+    const [number, setNumber] = useState(0)
+    
+	useEffect(() => {
+    	const tick = setTimeout(() => {
+            if(number < 10){
+                setNumber(number + 1)
+               	console.log(`Ticking and the next number is ${number+1}.`)
+            }
+        }, 1000)
+        
+        return () => {
+            clearTimeout(tick)
+        }
+    }, [number, setNumber])
+
+    return <div>The number is {number}.</div>
+}
+```
+
+In our example with the `useState` hook above we used dependency arrays to tell the hook to re-run this effect every time `number` changes. It follows that on the first render technically the previous render dependency array doesn't exist so as equality goes that will always make an effect to run.  *PS: `setNumber` was included as a best practice as it is an external dependency (aka was defined outside). There's a set of reasons why this is the case. Check out this [GitHub discussion](https://github.com/facebook/react/issues/14920#issuecomment-471070149) to learn more.* Regardless, this function will remain of the same reference so it will pass the equality checks across renders provided you didn't do anything out of the ordinary.  
+
+To further visualize, let's check out the state of the dependency array for the first 3 renders since `setNumber` will be equal across renders let's ignore it for now. Let's substitute `number` with the current value of the state given in the render. Given below, you can easily deduce the effect will run every re-render since the `number` increments every render. The re-renders will only stop when `number` is equal to 10 since no state changes will occur meaning that's the only time the defined effect won't run anymore. (*mental model #1*)
+
+Render 1 (`number = 0`) 
+
+```js
+[0] // [0] !== undefined (run the effect)
+```
+
+Render 2 (`number = 1`)
+
+```js
+[1] // [1] !== [0] (run the effect)
+```
+
+Render 3 (`number = 2`)
+
+```js
+[1] // [2] !== [1] (run the effect)
+```
+
+Since we are talking about equality, it's a good note to remember that everything is still Javascript so we have to incorporate this fact into our mental model. Ever wonder why it's recommended to wrap functions defined in a component behind a `useCallback` if we intend it to be part of a `useEffect` dependency array as a best practice? It's because of how Javascript works and the fact that `useEffect` only does shallow equality checks.
+
+I won't take a deep dive into this Javascript-specific concept. (This [course](https://justjavascript.com/) by Dan Abramov explains this well). In JS, objects' and functions' shallow equality is decided by reference regardless of the values inside. A new reference is created on every instantiation which would lead to inequality if different references were compared. Here are some examples visualizing the concept that was initially described.
+
+```js
+{} === {} 
+false
+
+const a = {}
+const b = {}
+a === b
+false
+
+const a = {}
+a === a
+true
+
+const a = {}
+a === {}
+false
+
+{ "value": 1 } === { "value": 1 }
+false
+
+const a = () => {}
+const b = () => {}
+a === b
+false
+```
+
+Why does this matter? It's because we are comparing the dependency array of the previous render which essentially means it's of a previous instantiation.
+
+For example, this component below will infinitely re-render till it causes a crash. Since `{}` of render n is not equal to `{}` of render n + 1. *PS: Removing setNumber from the dep. array for simplicity's sake.*
+
+```jsx
+const Component = () => {
+  const [number, setNumber] = useState(0)
+  useEffect(() => {
+    setNumber(n => n + 1)
+  }, [{}])
+  
+  return <div>The number is {number}.</div>
+}
+```
+
+Same with this one below, since every render `aFunction` has a different reference.
+
+```jsx
+const Component = () => {
+  const [number, setNumber] = useState(0)
+  const aFunction = () => {
+    console.log("Hello")
+  }
+
+  useEffect(() => {
+  	aFunction()
+    setNumber(n => n + 1)
+  }, [aFunction])
+
+  return <div>The number is {number}.</div>
+}
+```
+
+It's futile even if the object has the same value defined below. I guess if you want to check for actual object equality, `JSON.stringify` it? But why would you?
+
+```jsx
+const Component = () => {
+  const anObject = { value: 1 }
+  const [number, setNumber] = useState(0)
+
+  useEffect(() => {
+    setNumber(n => n + 1)
+  }, [anObject])
+  
+  return <div>The number is {number}.</div>
+}
+```
+
+Changing the dependency to `anObject.value`, however, will make the component render twice, one for the first render and another for the single state change. Since numbers in the JS universe are constants no matter how many times you define it, the effect will only run once.
+
+Let's explore another example. Using the mental model described, you know below will only run once since we are not instantiating/creating a new `anObject` every render since it's defined outside the function.
+
+```jsx
+const anObject = {"value": 1}
+
+const Component = () => {
+  const [number, setNumber] = useState(0)
+
+  useEffect(() => {
+    setNumber(n => n + 1)
+  }, [anObject])
+  
+  return <div>The number is {number}.</div>
+}
+```
+
+BONUS: Recreating `useRef` through `useState` keeping the mental models in mind. Technically we used the same object (same reference) so React assumed everything is the same and dandy (no state change). Since no re-render happened, only one effect was executed.
+```jsx
+const Component = () => {
+  const [number, setNumber] = useState({ current: 0 })
+
+  useEffect(() => {
+    number.current += 1
+    setNumber(number)
+  }, [number.current])
+  
+  return <div>The number is {number.current}.</div>
+}
+```
+If you're having troubles with effects running unexpectedly or infinitely, this can be the reason ;) Always remember it's just Javascript!
+
+---
+
+The last stop is the cleanup function! It's a little tricky to create a rule of thumb for this. So I'm going to create a personal take for this, which is to **follow the shoebox mental model for cleanup functions**. 
+
+## #3. Follow the shoebox mental model for cleanup functions
+We all know shoeboxes are known to ideally be just big enough to contain one pair of shoes. Think of it this way, imagine every `useEffect` definition contains one shoebox. On a render where a side effect returned a cleanup function, the hook places this cleanup function into the shoe box. The next time the hook will run the effect again, it will check first if the box has something inside. If it does, remove it then run it, throwing it away, before initiating the rerun of the effect and optionally (but ideally) store the next cleanup function for the next effect. Repeat. 
+
+Consider a scenario of a component with three `useEffect` definitions. The mental model is described below.
+
+!["useEffect: Shoebox Mental Model example"](/mental-models-with-use-effect/1.svg?w=90)
+
+Let's explore through some examples. Backreading, you might have thought about the refactoring I did in the ticking component before to accommodate the state. I added a `console.log` inside the cleanup function to illustrate a somewhat tricky thing to digest. I highly suggest you run this on your own!
+
+```jsx
+const TickingComponent = () => {
+    const [number, setNumber] = useState(0)
+    
+	useEffect(() => {
+    	const tick = setTimeout(() => {
+            if(number < 10){
+                setNumber(number + 1)
+               	console.log(`Ticking and the next number is ${number+1}.`)
+            }
+        }, 1000)
+        
+        return () => {
+            console.log(number)
+            clearTimeout(tick)
+        }
+    }, [number, setNumber])
+
+    return <div>The number is {number}.</div>
+}
+```
+
+As you can see, it's important to know that the cleanup function contains the lexical scope of its render regardless of whether it's being called in succeeding renders. Again, we should think in renders as every effect is tied to one. (*mental model #1*). Let's break down the first three renders substituting the value of `number` at the current render.
+
+Render 1 ( `number = 0` )
+
+```tsx
+useEffect(() => {
+    	const tick = setTimeout(() => {
+            if(0 < 10){
+                setNumber(0 + 1)
+               	console.log(`Ticking and the next number is ${0+1}.`)
+            }
+        }, 1000)
+        
+        return () => {
+            console.log(0)
+            clearTimeout(tick)
+        }
+}, [0, setNumber])
+```
+
+Render 2 ( `number = 1` )
+
+```js
+// runs the cleanup function of render 1
+useEffect(() => {
+    	const tick = setTimeout(() => {
+            if(1 < 10){
+                setNumber(1 + 1)
+               	console.log(`Ticking and the next number is ${1+1}.`)
+            }
+        }, 1000)
+        
+        return () => {
+        	console.log(1)
+            clearTimeout(tick)
+        }
+}, [1, setNumber])
+```
+
+Render 3 ( `number = 2` )
+
+```js
+// runs the cleanup function of render 2
+useEffect(() => {
+    	const tick = setTimeout(() => {
+            if(2 < 10){
+                setNumber(2 + 1)
+               	console.log(`Ticking and the next number is ${2+1}.`)
+            }
+        }, 1000)
+        
+        return () => {
+        	console.log(2)
+            clearTimeout(tick)
+        }
+}, [2, setNumber])
+```
+
+We can deduce that the cleanup function on every tick will print `n-1` where n is the current value of the state number at any given render. It is recommended that we follow this pattern as much as possible if we intend to have a cleanup where every effect has one since it can be tricky if the cleanup is conditional which will be described in the next section.
+
+Let's check out a trickier example. This component will tick to infinity with varying cleanup functions behind conditions on the second hook.
+
+```jsx
+const TrickierCleanup = () => {
+    const [number, setNumber] = useState(0)
+    
+	useEffect(() => {
+    	const unlimitedTicks = setInterval(() => {
+    		setNumber(n => n + 1)
+    	}, 1000)
+    	
+    	return () => {
+    		clearInterval(unlimitedTicks)
+    	}
+    }, [setNumber])
+    
+    useEffect(() => {
+    	if(number % 2 === 0){
+    		return () => {
+    			console.log(number)
+    		}
+    	}
+    	if (number % 3 === 0){
+    		return () => {
+    			console.log("hello")
+    		}
+    	}
+    }, [number])
+
+    return <div>The number is {number}.</div>
+}
+```
+
+Doing the shoebox mental model up to 7 renders,
+
+!["Shoebox Diagram for TrickierComponent"](/mental-models-with-use-effect/2.svg?w=90)
+
+It can be daunting I know, but if your code is patterned like the one above, you're probably doing something wrong. It's easier to imagine if every render where the effect will run has a corresponding clean up just like the first ticking example above. If you have to print the number on every even number and "hello" on every number divisible by 3 on cleanup, refactor it this way. 
+
+```jsx
+const BetterCleanup = () => {
+    const [number, setNumber] = useState(0)
+    
+	useEffect(() => {
+    	const unlimitedTicks = setInterval(() => {
+    		setNumber(n => n + 1)
+    	}, 1000)
+    	
+    	return () => {
+    		clearInterval(unlimitedTicks)
+    	}
+    }, [setNumber])
+    
+    useEffect(() => {
+    	return () => {
+    		if(number % 2 === 0){
+    			console.log(number)
+            }
+            else if (number % 3 === 0){
+            	console.log("hello")
+            }
+    	}
+    }, [number])
+
+    return <div>The number is {number}.</div>
+}
+```
+
+We just have to refactor the check with `number % 3 === 0` to an `else if` to make sure we have the same behavior for `number = 0`. After the simple refactor, it should have the same `console.log` behavior as the previous one. The only difference is it's easier to understand since every succeeding effect after the first render has a cleanup. It makes things much more predictable and you only need to check the previous render.
+
+The shoebox model for this will be below. Hopefully, you agree it's simpler than the first one. Take note of the `CLEANUP` function definition below.
+
+```js
+const CLEANUP = (n) => {
+	if(number % 2 === 0){
+    	console.log(number)
+    }
+    else if (number % 3 === 0){
+    	console.log("hello")
+    }
+}
+```
+
+!["Shoebox Diagram for BetterCleanup"](/mental-models-with-use-effect/3.svg?w=90)
+
+Another thing we should remember about the behavior of cleanup functions is that **on unmount any remaining cleanups will be executed.** 
+
+Using the same shoebox model, imagine the component will be removed from the DOM. If any of the defined `useEffect` hooks has unsettled cleanup functions aka. there are still shoes in the shoebox, one by one in order, run them. (empty all shoeboxes) The diagram below illustrates we still have `Cleanup 1C` and `Cleanup 3B` on the last render. Meaning on unmount, run these two remaining cleanups.
+
+!["useEffect: Shoebox Mental Model example"](/mental-models-with-use-effect/1.svg?w=90)
+
+
+This specific fact comes in handy if we want to mimic `componentWillUnmount` from class-based React components. Described by the component below.
+
+```tsx
+const UnmountEffect = () => {
+	useEffect(() => {
+		return () => {
+			console.log("Component has unmounted.")
+		}
+	}, [])
+	
+	return <div>Hello World</div>
+}
+```
+
+Combining everything we learned so far, that function with a console will be placed to the shoebox of that effect hook and since no dependencies were defined, only on the first render will this effect run. That's it *ezpz*.
+
+BONUS: If ever you have pending API calls and you expect this component to be unmounted at any time, it might be a good idea to add a fail-safe on the cleanup function to prevent any calls to a state change on an unmounted component removing that ominous React warning in the console regarding running state changes on an unmounted component. This is also handy for cases where we expect this effect to be overridden by another during operations. *PS: it's still better if you used a library that handles it for you or at least a fetching library that supports cancellation signals like `axios`*.
+
+```js
+useEffect(() => {
+	let overridden = false
+
+	const callApi = async() => {
+        const response = await ApiService.get()
+        if(!overridden && response.success){
+            setApiValues(response.value)
+        }
+	}
+
+	callApi()
+
+	return () => {
+		overridden = true
+	}
+}, [setApiValues])
+```
+
+----
+
+## TLDR;
+
+Our mental models for `useEffect` are what follows:
+
+- Effects come after a render
+- An effect will run if the dependency array is not equal to the dependency array of the previous render.
+-  Follow the shoebox mental model for cleanup functions.
+
+Hopefully it helps you as much as it helps me!
