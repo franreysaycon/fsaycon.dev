@@ -256,7 +256,7 @@ const Component = () => {
 
 Changing the dependency to `anObject.value`, however, will make the component render twice, one for the first render and another for the single state change. Since numbers in the JS universe are constants no matter how many times you define it, the effect will only run once.
 
-Let's explore another example. Using the mental model described, you know below will only run once since we are not instantiating/creating a new `anObject` every render since it's defined outside the function.
+Let's explore another example. Using the mental model described, you know below the effect will only run once since we are not instantiating/creating a new `anObject` every render since it's defined outside the function.
 
 ```jsx
 const anObject = {"value": 1}
@@ -272,7 +272,8 @@ const Component = () => {
 }
 ```
 
-BONUS: Recreating `useRef` through `useState` keeping the mental models in mind. Technically we used the same object (same reference) so React assumed everything is the same and dandy (no state change). Since no re-render happened, only one effect was executed.
+BONUS: Recreating `useRef` through `useState` keeping the mental models in mind. Technically, we used the same object (same reference) on `setNumber` function so React assumed everything is the same and dandy (no state change). Since no re-render happened, only one effect was executed.
+
 ```jsx
 const Component = () => {
   const [number, setNumber] = useState({ current: 0 })
@@ -285,6 +286,7 @@ const Component = () => {
   return <div>The number is {number.current}.</div>
 }
 ```
+
 If you're having troubles with effects running unexpectedly or infinitely, this can be the reason ;) Always remember it's just Javascript!
 
 ---
