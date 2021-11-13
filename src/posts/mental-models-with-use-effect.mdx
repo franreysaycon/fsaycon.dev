@@ -456,7 +456,7 @@ const BetterCleanup = () => {
 }
 ```
 
-We just have to change the check with `number % 3 === 0` to an `else if` to make sure we have the same behavior for `number = 0`. After the simple refactor, it should have the same `console.log` behavior as the previous one. The only difference is it's easier to understand since every succeeding effect after the first render has a cleanup. It makes things much more predictable and you only need to check the previous render's state.
+We just have to change the check with `number % 3 === 0` to an `else if` to make sure we have the same behavior for numbers divisible by 2 and 3. After the simple refactor, it should have the same `console.log` behavior as the previous one. The only difference is it's easier to understand since every succeeding effect after the first render has a cleanup. It makes things much more predictable and you only need to check the previous render's state.
 
 The shoebox model for this will be below. Hopefully, you agree it's simpler than the first one. Take note of the `CLEANUP` function used in the diagram.
 
@@ -473,6 +473,8 @@ const CLEANUP = (n) => {
 
 !["Shoebox Diagram for BetterCleanup"](/mental-models-with-use-effect/3.svg?w=90)
 
+If you haven't realized it, another way we can look at it is to check the last time the effect ran and check if a cleanup function was returned. If there was, run it, else continue. This can be your mental model but it might be harder to backtrack if for some reason your code is somewhat similar to the implementation of the `TrickierCleanup` which is another motivation for you to make effects that need cleanup to consistently return another cleanup on every run of the effect in every render regardless if it doesn't do anything.
+
 Another thing we should remember about the behavior of cleanup functions is that **on unmount any remaining cleanups will be executed.** 
 
 Using the same shoebox model, imagine the component will be removed from the DOM. If any of the defined `useEffect` hooks has unsettled cleanup functions aka. there are still shoes in the shoebox, one by one in order, run them. (empty all shoeboxes) The diagram below illustrates we still have `Cleanup 1C` and `Cleanup 3B` on the last render. Meaning on unmount, run these two remaining cleanups.
@@ -482,7 +484,7 @@ Using the same shoebox model, imagine the component will be removed from the DOM
 
 This specific fact comes in handy if we want to mimic `componentWillUnmount` from class-based React components. Described by the component below.
 
-```tsx
+```jsx
 const UnmountEffect = () => {
 	useEffect(() => {
 		return () => {
@@ -525,6 +527,6 @@ Our mental models for `useEffect` are what follows:
 
 - Effects come after a render
 - An effect will run if the dependency array is not equal to the dependency array of the previous render.
--  Follow the shoebox mental model for cleanup functions.
+- Follow the shoebox mental model for cleanup functions
 
 Hopefully it helps you as much as it helps me!
