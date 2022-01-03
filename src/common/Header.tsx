@@ -34,8 +34,8 @@ const MarginContainer = stitches.styled("div", {
 
 const Navigation = stitches.styled("nav", {
   display: "flex",
-  width: "12rem",
-  justifyContent: "space-evenly",
+  width: "10rem",
+  justifyContent: "space-between",
 })
 
 const NavItem = stitches.styled("span", {
