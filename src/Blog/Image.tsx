@@ -13,7 +13,7 @@ const Container = stitches.styled("div", {
   width: "100%",
   alignItems: "center",
   justifyContent: "center",
-  margin: "$rg 0",
+  margin: "$xl 0",
 })
 
 const Img = stitches.styled("img", {

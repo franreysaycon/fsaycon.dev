@@ -1,0 +1,98 @@
+---
+date: "2022-01-03"
+description: "Take a look at a route based strategy when dealing with microfrontends and its implications."
+duration: "20 minutes"
+mtag: software architecture
+tags: "Software Architecture, Frontend Development"
+title: "Route-based Microfrontends"
+---
+
+Ah. The prefix "micro-" makes an appearance to induce fear in software architects that knows the horrors of maintaining such a complex architecture. Now, it has crawled its way to the front end. As exaggerated as it is, the benefits of maintaining such architecture have always been centered around empowering product teams to be as independent as possible and to deploy code faster with the least worry about affecting other teams compared to a monolith that has a higher chance to have integration problems since everything is in one place. It is not without repercussions though. It can result in redundancies (e.g. bigger asset loads in the context of frontend). Not to mention, complexity only rises as more and more micro-apps are integrated into the ecosystem. There are many more studies and opinions on this matter but the statements above are the most significant in my opinion and they won't be the centerpiece for this blog.
+
+Here, we will be exploring one pattern on how an organization or developer might architect a micro frontend. We will only talk purely of theory. For the actual application, I will create a separate blog for it and I will be using React as an example.
+
+Reminiscing on my childhood, there's a classic anime I always remember whenever I deal with micro frontends. It's Voltes 5. Each member in the Voltes team pilots a working vehicle wherein when a big threat appears they can't handle individually they transform and combine into one strong robot. The same analogy can be used with micro frontends. It's an app with many apps (a.k.a micro apps) inside it. These micro apps function individually and play specific role/s for the app. If one micro app suddenly doesn't function, the app itself will be crippled but the other parts should still work (provided of course you followed proper separation). Crippled will always be better than dead. Don't you think? Let's volt in!
+
+!["Volt In - Voltes 5 Animation"](/route-based-microfrontend/volt-in.gif?w=50)
+
+Now, there are many ways to do this. Citing the typical ones include using the ol' reliable iframes, server-side composition through fragments (e.g. Nginx Fragments), client-side composition using web components or common library components if you chose to keep everything in the same stack, and the *tantanantan* focus of this blog, **route-based separation**.
+
+Our mental model for micro frontends is that every micro-app should be independent and functioning on its own. This just downright means for every app we want to develop on, that's one dev server for each and one (ideally) production build artifact as well. It follows that these micro-apps don't necessarily will be built with the same frontend stack. Regardless of the fact that you can mix and match stacks, I highly recommend sticking to a common one (like React for all) for hiring ease and reducing overall organizational context-switch complexity. Constant context switching is very taxing to do.
+
+I would also suggest that these micro apps have their own repository and have it's own CI/CD configurations that will lead to updating a part of the whole application rather than rebuilding the whole app that's common in typical monoliths. There's nothing stopping you from using a monorepo with or without sub modules. You can see this being advantageous immediately since we are rebuilding only parts of the app rather than the whole on which at scale will be a great thing to have. (especially if you're not using the new and improved fast compilers available to this date like Vite, or SWC).
+
+To implement this paradigm, we want to break the app into parts which will be separated through routes. Of course, the pre-requisite for this is the organization needs to define the different product teams that will own these micro-apps. Most importantly, this separation should make sense. I won't delve into the factors to consider for the separation since it will be a different topic altogether so let's just say that politics is magically over and we have a major app called The Great App that has three micro apps, App A, App B, and App C which is owned by Team A, Team B, and Team C respectively. 
+
+We have a domain for The Great App under thegreatapp.com. To keep things simple, we define the following routes for the three micro-apps. It follows any sub-routes that come after the fact will be owned by the team respectively.
+- thegreatapp.com/a for App A
+- thegreatapp.com/b for App B
+- thegreatapp.com/c for App C
+
+We want the domain to redirect to App A if the index or `thegreatapp.com/` was accessed. I recommend doing it this way, not having an index, if you want to keep things dirt simple since everything can be uploaded to one hosting (e.g. S3 container) where each app is separated through folders named with their respective routes with little to no worries of name conflicts. If you insist in having one, hire a good devops that can setup a CDN / webproxy to point in multiple containers which can be a headache. (haha). In CRA for example, you need to define a homepage hardcode in your `package.json` in order to make sure the assets are requested with the right base url else everything will be requested with index as a base which will yield the wrong effect. PS. You can always redirect to `/home` if you want a replacement for index. ;) 
+
+Take note, that this is assuming your frontend is all static (as it's recommended to be, JAMStack ftw). The statement above is not a written rule and will always depend on your organization's needs. I just chose a convenient separation paradigm in my example.
+
+The following diagram is the ideal dev setup for this. We want the benefits of teams being independent as well as building only parts of a whole on every team's release. You may use reverse proxies or a static web server to implement this as easily as possible. 
+
+!["Flow diagram of route based micro frontends"](/route-based-microfrontend/1.svg?w=90)
+
+There are more clever ways to do this such as using Amazon Cloudfront and S3 to take advantage of those edge networks, high cache hit rates, and bandwidth-based payments. I'm sure there are more solutions out there. You just have to think about how you would direct requests into the proper artifact on every access of the route as your core fundamental problem. Answer that, everything else will follow.
+
+---
+
+## Handling Common Dependencies
+
+Now, I know what you're thinking. What about the common stuff? This is where it gets a bit debate-y. I have my opinions on this but always remember in software engineering there's no silver bullet solutions. We only choose the problems we want to endure. Listing the typical ones, these would be the headers and footers (or any site wide common component), authentication libraries, and the biggest bulk, the design framework. 
+
+Here's the thing, the main motivation for doing a "micro" architecture is **to decouple as much as possible**. To introduce internal libraries that must be used by all the micro-apps of a specific app goes against that principle. Not to mention, that will be your entry point for a whole site failure if a malicious code made its way to any of the common libraries. But to be honest, in my opinion, there are two concepts I would take the bullet for: authentication and the design framework.
+
+!["Taking the bullet GIF - Boss Baby"](/route-based-microfrontend/taking-bullet.gif?w=50)
+
+**Authentication** should be consistent across all of the micro-apps. The session will be tied to the domain of the main app if we follow modern OAuth standards or even traditional cookie sessions. Unless there's a special case on your micro-apps, ideally all of them should have the same authentication mechanism as well as the components to update that authentication state. (e.g. login form popups, logout API, SSO button, automatic background session refresh, etc.). The authentication app itself can be a micro-app on a separate route for login but we would still need a way to access the information fetched from our identity servers. Consistency is key here since the alternative is implementing this each time in every micro-app which would definitely lead to bugs with a high chance at that. We all know what authentication bugs can induce, a sitewide monstrosity of a bug. If authentication is a common library, all we have to do is update the dependency for each micro-app every time there's a release for it. If ever you decide that the redundancy is much more favorable, by all means, do it as it gives more confidence in terms of micro-app independence but can be a nasty overhead dependent on how big your application is nor would I recommend it.
+
+The **design framework** should be a straightforward reason. We know it's common sense that branding should be consistent for all micro-apps under an app unless there's a push not to do that (really depends but most of the time it should). The micro frontend architecture in my opinion is really for the benefit of the organization to be able to deploy fast and practice independence between product teams. It shouldn't affect UX. The user experience should still be as if they are working with one app to make sure the brand identity is imprinted in our users. I'm not saying we should limit creativity, but it's important to have this identity for conversion, virality, and other business benefits out there people would list to you why the brand is important. (I'm not really a product manager). Companies won't pay millions of dollars for a logo if they think their company's brand is not important. Right?
+
+What about headers and footers that are typically the same on all the views? You can make the case that these components should be part of your design framework, but I have no real strong feelings of these being redundant as I want design frameworks to be atomic as possible for flexibility and to limit future bugs. You'll never know if the said header will be of a different form in another micro-app. I would keep it redundant and accept the tradeoff of changing all micro-app navigations when a new micro-app route is being developed or a part of the navigation needs to be updated. In my experience, it only happens seldom so the issue is slightly moot.
+
+---
+
+## Communication 
+
+The next topic of discussion is the communication problem. What if App A needs to communicate something to App B? Ideally, this shouldn't be an often thing since if this happens quite a lot, the organization might want to restructure how the product teams are separated since often communication means the micro-apps in question should probably be merged into one micro-app. There are three ways you could communicate in my experience: Route states, local storage, and backend states.
+
+---
+
+### Routes States
+This is very straightforward. Either you pass in route parameters or add the actual artifact in the URI string for the perusal of the micro-app in question. Consider the scenario below.
+
+You have a micro-app, User List App, whose main function is to manage a list of users. If a user clicked on a user in the list, it should redirect to the micro-app, User Details App, whose main function is to show details of that said user and different things you could do with that user.  In the User List App, there should be an identifier to the user that was clicked. All this app has to do is either add the identifier as parameters or as part of the URI string on the redirect to the User Details App. Let's say we clicked the user if the id of `abc`. We either call `/user-details?id=abc` or `/user-details/abc`. All User Details App has to do is check that specific parameter and do the API calls needed to form the view. If not found, you know you'll just default to a 404 page.
+
+--- 
+
+### Local Storage
+All the micro apps in your main app are under one domain. Local storage is a browser API tied to the domain. You can use this storage to communicate with the different micro-apps. I would suggest the practice of treating local storage as if it was a cache and think of keys that will be used as an identifier for your micro-apps which will come in handy if we are expecting a certain state from another micro-app to be accessed in a different micro-app.
+e.g.  Sample Local Storage Paradigm
+```
+{
+	"app-a": "....data here",
+	"app-b": "....data here",
+	....
+}
+```
+
+---
+
+### Backend State
+If we have local storage in the frontend as a shared state, another one is the backend. The prerequisite is the fact that the backend utilizes a source of truth that is shared across the different micro frontends in question. This will not be the case most of the time since, if you are practicing micro frontends, there's a chance you are practicing microservices as well which would induce overhead work in terms of syncing if we followed the pattern of having independent databases. Consider the scenario below. PS: You can be clever with your architecture and use real-time syncing through sockets as well. 
+
+e.g. You have a micro-app, App A, whose main job is to show you the different documents you have created, and another micro-app, App B, whose main job is to enable you to edit the said document. Now, we want App A to be aware of which documents are recently updated or have an unsaved draft. It's up to App B, to update the backend state to show this is the case. My earlier statements would dictate this should be in the same micro-app since they are co-dependent. But, it's really up to the organization, as a full-blown editor can be a monster of its own that can warrant the need for independence. 
+
+---
+
+You can now imagine how complex micro frontends can be from this one pattern alone. Analyzing the effect of this pattern in terms of cost perspective (the bandwidth and storage usage). Since every app is separated through a route we can imagine that a full-blown page request will be done each time a user switches between micro-apps. This means downloading the full set of JS bundles again rather than just a part of it in the case of single app applications that practice lazy loading. If we don't cache properly, this would induce higher bandwidth costs, as well as, bigger storage is needed due to welcomed redundancies. If for example React was used to create three micro apps, three instances of React will be on each of the app's bundles unless you used a specific solution to remedy this.
+
+It follows this pattern would need service-specific functionality such as pointing route access to the right production bundle and/or specific code on your static web server (e.g. made with Express) to allow such specific static file access which can be a bothersome overhead. 
+
+Plus ultra! Hopefully, you learned a lot! Route-based micro frontends in my opinion are far the easiest to implement in the grand scheme of things compared to the other strategies. You won't need to worry about CSS resolutions (unless you use too much global stuff), making sure your app looks good inside an iframe, nor deal with the Shadow DOM. Everything is separated through routes that would mean each micro-app will have its own context for its assets. You can use whatever frontend stack you want for the micro-app in question as long as there's a service level solution that would point to that micro-app respectively when their mapped route is accessed. Heck, you can even create a pure SSG solution for two micro apps and the remaining micro-apps as server-side rendered solutions. That's the beauty of having it separated through routes, it doesn't matter as long as you can serve the assets for the corresponding micro-app to the client properly. 
+
+PS:  There's no stopping you from mixing and matching other paradigms but I would suggest sticking to frontend monoliths unless there's an actual need for the organization to adopt any micro frontend strategy.  Frontend monoliths benefit from the many optimizations built-in on modern JS bundlers such as tree-shakes and lazy loading which is often preferred over the welcomed redundancy in micro frontends if we want to deliver a view as fast as possible (especially on low internet areas). However, it's still dependent on how the app was configured regardless. As always, everything is still on a case-to-case basis, you or your org may end up with their own completely different internal solution. The downright motivation for micro frontends is we want to support near if not totally independent frontend apps controlled by a specific team and the said team should be able to deploy a release with little to no worries of affecting another team as fast as possible. That is the core motivation.
