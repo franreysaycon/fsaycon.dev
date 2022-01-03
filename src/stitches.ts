@@ -22,6 +22,7 @@ const stitches = createStitches({
       mtag: "$orange",
       underline: "$orange",
       footer: "$white",
+      twitter: "$orange",
     },
     space: {
       xxs: "0.422rem",

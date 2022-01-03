@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import stitches from "../stitches"
 import Link from "next/link"
 import { useRouter } from "next/dist/client/router"
+import { FaTwitter } from "react-icons/fa"
 
 const Logo = stitches.styled("span", {
   fontFamily: "$abrilFatface",
@@ -33,7 +34,7 @@ const MarginContainer = stitches.styled("div", {
 
 const Navigation = stitches.styled("nav", {
   display: "flex",
-  width: "10rem",
+  width: "12rem",
   justifyContent: "space-evenly",
 })
 
@@ -62,6 +63,19 @@ const NavItem = stitches.styled("span", {
       },
     },
   },
+})
+
+const TwitterButton = stitches.styled("a", {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "$xxs",
+  backgroundColor: "$twitter",
+  fontFamily: "$quattrocentroSans",
+  textDecoration: "none",
+  borderRadius: "30px",
+  fontSize: "$sm",
+  color: "$white",
 })
 
 const Header = () => {
@@ -104,6 +118,12 @@ const Header = () => {
               Who Am I?
             </a>
           </NavItem>
+          <TwitterButton
+            href="https://twitter.com/intent/follow?ref_src=twsrc%5Etfw%7Ctwcamp%5Ebuttonembed%7Ctwterm%5Efollow%7Ctwgr%5Efreybourne&screen_name=freybourne"
+            target="_blank"
+          >
+            <FaTwitter />
+          </TwitterButton>
         </Navigation>
       </MarginContainer>
     </Container>
