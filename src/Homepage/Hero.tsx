@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Fold from "../common/Fold"
 import stitches from "../stitches"
 import HN from "../common/HN"
@@ -6,6 +6,11 @@ import HN from "../common/HN"
 const appear = stitches.keyframes({
   "0%": { transform: "translate(0px, 30px)", opacity: 0 },
   "100%": { transform: "translate(0px, 0px)", opacity: 1 },
+})
+
+const fadeIn = stitches.keyframes({
+  "0%": { opacity: 0 },
+  "100%": { opacity: 1 },
 })
 
 const Container = stitches.styled(Fold, {
@@ -35,6 +40,9 @@ const CubeContainer = stitches.styled("div", {
   width: "12rem",
   height: "12rem",
   animation: `${hoverAnimation} 1s ease-in 0s alternate infinite none running`,
+  "& > img": {
+    animation: `${fadeIn} 0.5s ease-in`,
+  },
 })
 
 const SpielContainer = stitches.styled("div", {
@@ -50,21 +58,35 @@ const NameContainer = stitches.styled("div", {
   alignSelf: "flex-end",
 })
 
-const Hero = () => (
-  <Container>
-    <CubeContainer>
-      <img
-        src="/cube.png"
-        alt="Floating cube in hero section"
-        width="100%"
-        height="100%"
-      />
-    </CubeContainer>
-    <SpielContainer>
-      <HN.h1>Adventures with code</HN.h1>
-      <NameContainer>by Franrey Anthony S. Saycon</NameContainer>
-    </SpielContainer>
-  </Container>
-)
+const Hero = () => {
+  const [cubeLoaded, setCubeLoaded] = useState(false)
+
+  useEffect(() => {
+    const image = new Image()
+    image.src = "/cube.png"
+    image.onload = () => {
+      setCubeLoaded(true)
+    }
+  }, [setCubeLoaded])
+
+  return (
+    <Container>
+      <CubeContainer>
+        {cubeLoaded && (
+          <img
+            src="/cube.png"
+            alt="Floating cube in hero section"
+            width="100%"
+            height="100%"
+          />
+        )}
+      </CubeContainer>
+      <SpielContainer>
+        <HN.h1>Adventures with code</HN.h1>
+        <NameContainer>by Franrey Anthony S. Saycon</NameContainer>
+      </SpielContainer>
+    </Container>
+  )
+}
 
 export default Hero

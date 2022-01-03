@@ -10,9 +10,9 @@ interface PreviewT {
   previews: BlogPreview[]
 }
 
-const zoomAppear = stitches.keyframes({
-  "0%": { transform: "scale(0.9)", opacity: 0 },
-  "100%": { transform: "scale(1)", opacity: 1 },
+const appear = stitches.keyframes({
+  "0%": { transform: "translate(0px, 30px)", opacity: 0 },
+  "100%": { transform: "translate(0px, 0px)", opacity: 1 },
 })
 
 const PreviewContainer = stitches.styled(Fold, {
@@ -42,7 +42,7 @@ const Preview = stitches.styled("div", {
     transform: "translate(0px, -20px)",
   },
   transition: "transform 0.2s linear",
-  animation: `${zoomAppear} 0.2s ease-in`,
+  animation: `${appear} 0.5s ease-in`,
 })
 
 const TagContainer = stitches.styled("div", {
