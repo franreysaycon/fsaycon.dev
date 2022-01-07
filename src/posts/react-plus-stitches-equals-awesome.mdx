@@ -1,0 +1,395 @@
+---
+date: "2022-01-08"
+description: "Explore Stitches + React by building a theme toggle app. See Stitches's API in action!"
+duration: "15 minutes"
+mtag: frontend development
+tags: "React, Stitches, Javascript"
+title: "React + Stitches = Awesome"
+---
+
+[Stitches](https://stitches.dev/) is an excellent library if you prefer to be as close as writing CSS with the bonus of having a solid JS API. For this blog, let's create a React application with Stitches to see how the styling library would integrate and influence how we code our interactivities. 
+
+We will be creating a straightforward app with the following functionalities.
+- Show a "Karma Chameleon" in the center.
+- Three buttons with the labels `Light`, `Dark` and `Funky`
+- Clicking any buttons would update the background and text color of "Karma Chameleon" to their corresponding theme. 
+
+TLDR; a theme toggle application.
+
+For simplicity's sake, let's use create-react-app (CRA) for this one. I won't be changing anything out of the ordinary. I will remove all the unnecessary artifacts like CSS and other setups. After the fact, I should only have the `HelloWorld.jsx` in the components folder and the `index.js` that injects the only defined component.
+
+To easily create your app with CRA, just run the command below:
+
+`npx create-react-app karma-chameleon`
+
+!["React Folder Structure"](/react-plus-stitches-equals-awesome/structure.png?w=70)
+
+Next stop, let's install Stitches! We will be using the react-based library instead of the framework-agnostic core. I like `yarn` so I'll use `yarn`.
+
+`yarn add @stitches/react`
+
+My approach with any design framework is heavily using design tokens, an available API in stitches. Tokens enable accessing the values specified in a configuration. Before you see that in action, let's define the bread and butter of stitches, the Stitches configuration file. 
+
+Let's only define the Light theme, aka the default theme. The other values are personal preferences. Feel free to change them depending on your app's design context. Read through the [documentation](https://stitches.dev/docs/introduction) for more information on the different keys I used and any others you can define. I depicted my global CSS preferences as well.
+
+```js
+// create stitches.js in src
+import { createStitches } from "@stitches/react";
+
+const stitches = createStitches({
+  media: {
+    bp1: "(min-width: 320px)",
+    bp2: "(min-width: 768px)",
+    bp3: "(min-width: 1200px)",
+  },
+  theme: {
+    colors: {
+      // generated from coolors.co
+      aliceBlue: "#F4FAFF",
+      davyGrey: "#535657",
+
+      cadetBlue: "#4F646F",
+      platinum: "#DEE7E7",
+
+      darkKhaki: "#B5BA72",
+      darkSlateBlue: "#4F359B",
+
+      // elements
+      bg: "$aliceBlue",
+      fg: "$davyGrey",
+    },
+    space: {
+      xxs: "0.422rem",
+      xs: "0.563rem",
+      sm: "0.75rem",
+      rg: "1rem",
+      md: "1.33rem",
+      lg: "1.77rem",
+      xl: "2.369rem",
+      xxl: "3.157rem",
+    },
+    fontSizes: {
+      xxs: "0.422rem",
+      xs: "0.563rem",
+      sm: "0.75rem",
+      rg: "1rem",
+      md: "1.33rem",
+      lg: "1.77rem",
+      xl: "2.369rem",
+      xxl: "3.157rem",
+    },
+    fonts: {
+      abrilFatface: "Abril Fatface, serif",
+      quattrocentroSans: "Quattrocento Sans, sans-serif",
+    },
+  },
+})
+
+const injectGlobalStyles = stitches.globalCss({
+  "*": { boxSizing: "border-box", fontFamily: "Hammersmith One" },
+  "*:after": { boxSizing: "border-box", fontFamily: "Hammersmith One" },
+  "*:before": { boxSizing: "border-box", fontFamily: "Hammersmith One" },
+  body: { margin: 0, padding: 0 },
+  h1: { margin: 0 },
+})
+
+injectGlobalStyles()
+
+export default stitches
+```
+
+Given the configuration above, we may now implement the initial view of the React application with the default theme! The object returned from the `createStitches` call contains different APIs that would help style your components. We will gradually touch some of them. 
+
+See tokens in action below! For example, we used the `$bg` token to get the value of the variable `bg` under the default theme. That's right! Stitches is smart enough to do the corresponding substitution. Not to mention, since it's typed, auto-suggestion is active!
+
+```js
+// KarmaChameleon.js
+import stitches from "./stitches";
+
+const { styled } = stitches;
+
+const Container = styled("div", {
+  alignItems: "center",
+  backgroundColor: "$bg",
+  color: "$fg",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  minHeight: "100vh",
+  width: "100vw",
+});
+
+const ButtonContainer = styled("div", {
+  display: "flex",
+  fontSize: "$xxl",
+  marginTop: "$lg",
+  maxWidth: "1200px",
+  "> button": {
+    "+ button": {
+      marginLeft: "$lg",
+    }
+  }
+});
+
+const Button = styled("button", {
+  backgroundColor: "$bg",
+  border: "2px solid",
+  borderColor: "$fg",
+  borderRadius: "25px",
+  boxShadow: "none",
+  color: "$fg",
+  fontSize: "$rg",
+  padding: "$rg $lg",
+  "&:hover": {
+    cursor: "pointer",
+  },
+});
+
+const App = () => {
+  return (
+    <Container>
+      <h1>Karma Chameleon</h1>
+      <ButtonContainer>
+        <Button>Light</Button>
+        <Button>Dark</Button>
+        <Button>Funky</Button>
+      </ButtonContainer>
+    </Container>
+  );
+}
+
+export default App;
+```
+
+To summarize, we used `styled` to generate a React component with the following defined styles. We used design tokens in some of the values to use the value specified in our configuration, which will be necessary for our theme overrides and, in general, a good practice for consistency. The `globalCss` API creates a function we can call to define the app's global CSS. Look at the preview below.
+
+!["Karma Chameleon Preview"](/react-plus-stitches-equals-awesome/karma.png?w=70)
+
+---
+
+Now, we need to define the other themes. The `createTheme` API is our hero for this. We will use a state to track the current theme, enabling us to change it through the corresponding button clicks. It follows we need to refactor a little bit to allow value overrides through design tokens. See it in action below!
+
+```js
+// stitches.js
+export const darkTheme = stitches.createTheme({
+    colors: {
+        bg: "$darkJungleGreen",
+        fg: "$fluorescentBlue",
+    }
+});
+
+export const funkyTheme = stitches.createTheme({
+    colors: {
+        bg: "$darkKhaki",
+        fg: "$darkSlateBlue",
+    }
+});
+
+// KarmaChameleon.js
+import stitches, { darkTheme, funkyTheme } from "./stitches";
+
+// ... other stitches stuff from earlier
+const themeMap = {
+  light: null,
+  dark: darkTheme,
+  funky: funkyTheme,
+}
+
+const App = () => {
+  const [theme, setTheme] = useState('light')
+
+  return (
+    <Container className={themeMap[theme]}>
+      <h1>Karma Chameleon</h1>
+      <ButtonContainer>
+        <Button onClick={() => setTheme('light')}>Light</Button>
+        <Button onClick={() => setTheme('dark')}>Dark</Button>
+        <Button onClick={() => setTheme('funky')}>Funky</Button>
+      </ButtonContainer>
+    </Container>
+  );
+}
+
+export default App;
+```
+
+And..... viola!
+
+!["Karma Chameleon Theme Preview"](/react-plus-stitches-equals-awesome/theme-preview.gif?w=70)
+
+
+Time for finishing touches! We want responsiveness in our application. Flashback on the configuration, we defined three breakpoints. Keeping that in mind, we can use the tokens to create media queries, the Stitches way. The `@bp2` token is `(min-width: 768px)` in our configuration.
+
+```js
+// only the buttons need to adjust
+// mobile first approach
+const ButtonContainer = styled("div", {
+  display: "flex",
+  fontSize: "$xxl",
+  marginTop: "$lg",
+  maxWidth: "1200px",
+  flexDirection: "column",
+  "@bp2": {
+    flexDirection: "row",
+  },
+  "> button": {
+    "+ button": {
+      marginTop: "$lg",
+      "@bp2": {
+        marginTop: 0,
+        marginLeft: "$lg",
+      },
+    },
+  },
+})
+```
+
+Having a screen size less than `768px` will result to the view below.
+
+!["Karma Chameleon Responsiveness Preview"](/react-plus-stitches-equals-awesome/responsive.png?w=30)
+
+Of course, we want the transition of the background and foregrounds to be smooth. We can also add simple animations with the `keyframes` API of Stitches for those fabulous fade-ins. 
+
+```js
+// KarmaChameleon.js
+const { styled, keyframes } = stitches;
+
+const goIn = keyframes({
+  "0%": {
+    opacity: 0,
+    transform: "translateY(10px)",
+  },
+  "100%": {
+    opacity: 1,
+    transform: "translateY(0px)",
+    visibility: "visible",
+  }
+});
+
+const Container = styled("div", {
+  ... other styles from before,
+  transition: "background-color ease-in 0.5s",
+  "> h1": {
+    animation: `${goIn} ease-in 0.5s`,
+  },
+});
+
+// ... other stitches stuff
+
+const Button = styled("button", {
+  animation: `${goIn} ease-in 0.5s`,
+  animationFillMode: "forwards",
+  ...other styles from before,
+});
+
+const App = () => {
+  const [theme, setTheme] = useState('light')
+
+  return (
+    <Container className={themeMap[theme]}>
+      <h1>Karma Chameleon</h1>
+      <ButtonContainer>
+        <Button
+          css={{animationDelay: "0.25s"}}
+          onClick={() => setTheme('light')}
+        >
+          Light
+        </Button>
+        <Button
+           css={{animationDelay: "0.5s"}}
+           onClick={() => setTheme('dark')}
+        >
+          Dark
+        </Button>
+        <Button
+           css={{animationDelay: "0.75s"}}
+           onClick={() => setTheme('funky')}
+        >
+          Funky
+        </Button>
+      </ButtonContainer>
+    </Container>
+  );
+}
+
+export default App;
+```
+
+Time for some magic (> o_o)>/* 
+
+!["Karma Chameleon Animation Preview"](/react-plus-stitches-equals-awesome/animation.gif?w=70)
+
+Another minor nit is an indicator of which theme is currently present. We will use the `variants` API to swap the foreground and background when the button's theme is currently selected.
+
+```js
+const Button = styled("button", {
+  ... other styles from before,
+  variants: {
+    selected: {
+      true: {
+        color: "$bg",
+        backgroundColor: "$fg",
+      },
+    },
+  },
+});
+
+const App = () => {
+  const [theme, setTheme] = useState('light')
+
+  return (
+    <Container className={themeMap[theme]}>
+      <h1>Karma Chameleon</h1>
+      <ButtonContainer>
+        <Button
+          css={{animationDelay: "0.25s"}}
+          selected={theme === 'light'}
+          onClick={() => setTheme('light')}
+        >
+          Light
+        </Button>
+        <Button
+          css={{animationDelay: "0.5s"}}
+          selected={theme === 'dark'}
+          onClick={() => setTheme('dark')}
+        >
+          Dark
+        </Button>
+        <Button
+          css={{animationDelay: "0.75s"}}
+          selected={theme === 'funky'}
+          onClick={() => setTheme('funky')}
+        >
+          Funky
+        </Button>
+      </ButtonContainer>
+    </Container>
+  );
+}
+
+export default App;
+```
+
+Then, we are done!
+
+!["Karma Chameleon Variants Preview"](/react-plus-stitches-equals-awesome/variants.gif?w=70)
+
+And then, we are done! The final code is on this [repository](https://github.com/franreysaycon/karma-chameleon) or check out this website. Feel free to do whatever you want with it. 
+
+There is more to explore with Stitches. I've barely scratched the surface. To name a few, you can define utilities in the configuration that are called SASS style and support SSR.
+
+To summarize, Stitches has the following advantages:
+- fast benchmarking vs. emotion and styled-components
+- robust JS API (as you have noticed above)
+- supports SSR
+- built with React in mind.
+- Typed. AUTOCOMPLETE IS EFFIN AWESOME! It also checks type integrity with variants and utilities, which I appreciate. 
+
+It's not all unicorns and rainbows, to be honest. I noticed some hit to the dev experience, primarily if you're used to just using CSS. I listed below some of the downsides of using this library.
+- It's not precisely CSS that can be a good or bad thing.
+- You use CSS syntax on the values, but camel-case converted CSS strings on keys. 
+- It might be too React centric, as the core library uses class names that could clash with - a library's/framework's paradigm.
+- Non-modern browsers won't run this. (but what styling JS library does? haha) 
+- Props are limited to variants, and you can't do prop-based logic without extra overhead, unlike in `styled-components` where you can access props and do whatever you want. 
+
+I love this library. I already used it with this blog and other misc projects. TLDR; **React + Stitches = Awesome**.
