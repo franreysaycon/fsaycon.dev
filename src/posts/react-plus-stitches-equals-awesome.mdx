@@ -28,9 +28,9 @@ Next stop, let's install Stitches! We will be using the react-based library inst
 
 `yarn add @stitches/react`
 
-My approach with any design framework is heavily using design tokens (a concept in originally in System UI), luckily also, available in Stitches. Tokens enable accessing the values specified in a configuration. Before you see that in action, let's define the bread and butter of stitches, the Stitches configuration file. 
+My approach with any design framework is heavily using design tokens. Tokens define the values of our design system. Luckily, Stitches makes that easy for us. But, before you see that in action, let's define the bread and butter of Stitches, the configuration file. 
 
-Let's only define the Light theme, aka the default theme. The other values are personal preferences. Feel free to change them depending on your app's design context. Read through the [documentation](https://stitches.dev/docs/introduction) for more information on the different keys I used and any others you can define. I depicted my global CSS preferences as well.
+Let's only define the Light theme, aka the default theme for now. The other values are personal preferences. Feel free to change them depending on your app's design context. Read through the [documentation](https://stitches.dev/docs/introduction) for more information on the different keys I used and any others you can define. I depicted my global CSS preferences as well.
 
 ```js
 // create stitches.js in src
@@ -379,7 +379,7 @@ To summarize, Stitches has the following advantages:
 - robust JS API (as you have noticed above)
 - supports SSR
 - built with React in mind.
-- Typed. AUTOCOMPLETE IS EFFIN AWESOME! It also checks type integrity with variants and utilities, which I appreciate. 
+- Typed. **AUTOCOMPLETE IS EFFIN AWESOME!** It also checks type integrity with variants and utilities, which I appreciate. 
 
 It's not all unicorns and rainbows, to be honest. I noticed some hit to the dev experience, primarily if you're used to just using CSS. I listed below some of the downsides of using this library.
 - It's not precisely CSS that can be a good or bad thing.
