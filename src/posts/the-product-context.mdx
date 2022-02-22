@@ -1,0 +1,101 @@
+---
+date: "2022-02-05"
+description: "Let's tackle the product context on what it is and why we engineer should care about requesting it."
+duration: "15 minutes"
+mtag: soft skills
+tags: "Soft Skills, Product Management"
+title: "The Product Context"
+---
+
+Hey code adventurers!
+
+In this blog, let's tackle the product context on what it is and why we engineers, even though we delve into the code most of the time, should care about requesting it.
+
+Storytime! At the start of the year, a meeting was set to discuss a particular communication module to be integrated with our platform. Information flooded the screen on what the module should support, such as messaging, notifications, etc. This is in response to a service's deprecation that wasn't even introduced to us. Although we highly appreciate the notion that the product lead doesn't want to dictate how the architecture should be done, we all just replied with confused faces as we didn't know what the module was for nor our success criteria. We can't even give alternatives or critic the proposed solution.
+
+Many meetings came after that. Fast forward to the events, we only attained alignment the moment the product lead presented what the current flow was and what specific pain points we needed to solve. The aha! moment reflected on everyone's faces after that. As you might guess by now, it's because the product context was finally given!
+
+For me, the product context is the combination of defining the following: 
+- the reality
+- the fantasy
+- the why
+
+Having been in startups the majority of my career to this writing and having experience dealing with clients as a freelancer, I use this as a framework to organize my thoughts and sometimes the clients', to lead ourselves to a solution we think is best.
+
+I believe in learning through examples so let's explore a scenario. We have a product owner named Edward. He owns an online pet store where users can search for different pet products, add them to a cart, and checkout. Several days passed, Edward noticed that many people were adding products to their carts, but only a few checked out.
+
+---
+
+## The Reality
+
+We describe the application's current state that is relevant to the problem. In other words, we define our current reality. This could include the existing funnel, the pain points, the current behavior of users, the current statistics, the undesirable outcomes, or outright what is broken. Whatever facts we deem as pertinent to the problem.
+
+The first reality is that customers rarely checked out (or in product management terms) convert. In this case, the facts we might need are the current user funnel, the statistics of conversion, and probably the overall UX of using the product (how responsive/fast functionality is, etc.)
+
+The flow chart below describes the funnel to check out a 5kg dog food sack branded Fran's Taste of the Wild, one specific chew toy called the Teethening, and five dental sticks named TeethJerky. 
+
+!["Sample App Flowchart"](/the-product-context/flowchart.png?w=70)
+
+For the sake of discussion, let's describe the imaginary UX. The search functionality was fast, and you could see the results accurately. You were able to click on the add to cart button where you can enter the amount you want, and it neatly summarizes the current items of your cart on a sidebar with an easy-to-see checkout button underneath. The wireframe describes that below crudely.
+
+!["Sample App Wireframe"](/the-product-context/wireframe.png?w=70)
+
+As stated in the flowchart, for you to checkout, you need to fill in details of your address, email address, full name, birthday, pet details, and then finally, your credit card. All of which are clear instructions. Then, a prompt will open before processing your order, notifying you to copy-paste a code from your email to confirm your order. Entering the correct code would lead you to the success page prompting that you have successfully checked out.
+
+You already might have guessed a solution from here alone, but it is imperative to be data-driven. Let's not jump to conclusions just yet. If you don't have analytics, I'm afraid it will be a trial and error. There's no other way around it, so you need to add one as standard practice dictates. (It's relatively trivial to add Google Analytics)
+
+The funnel analysis is described below. The engineer of Edward was kind enough to include some custom events so we could look at things even further. This is just a mock of the real thing. Google Analytics has a funnel and path exploration feature that will show a similar view but is much more elegant than what's below. P.S.: In real life, numbers won't add up perfectly, as many things can happen, like refreshing and double-clicking events, etc. User behavior is unpredictable.
+
+!["Sample App Funnel Analysis"](/the-product-context/funnel-analysis.png?w=70)
+!["Sample App Event Analysis"](/the-product-context/event-analysis.png?w=70)
+
+We could see the heavy dropoff from `/checkout` before reaching `/success.` `/checkout` is the page where users are prompted to enter those different details and code confirmation. `/success` is the page that shows the summary of their order and a message indicating they've checked out.
+
+The events statistics paint a much more specific story. The significant percentage dropoff happens when the users are prompted to enter their pets' details. No significant dropoff is observed from pet details submitting and entering and the credit card information and code confirmation. 80% reach success after getting through personal and pet information hurdles.
+
+Now, you might want to skip defining the others and just outright go defining the solution, having seen the reality. Well, no one is stopping you. But remember the story from earlier? We wasted a lot of time since we skipped to the solution after seeing the problem. I'll explain further why it's necessary to define the other two.
+
+---
+
+## The Fantasy
+We define the ideal scenario as if the pain points were gone. The future you want to achieve. The goal you want to aim for.
+
+Our fantasy is obviously more conversions in our example scenario, meaning more people checking out. It's natural to desire the success of our product.
+
+It's essential to define this to determine the success criteria or the definition of done for developers. Fantasy becoming a reality is an indication that our proposed solution is working. The critical thing to note is that this fantasy needs to be S.M.A.R.T. (specific, measurable, achievable, relevant, and time-bound). This is basically a goal-setting exercise!
+
+---
+
+## The Why
+Here we define the why's of fantasy and reality. This will provide further context why reality is what it is and why we want to achieve such fantasy. 
+
+We then interview Edward about why the funnel is like this. He then answered the following.
+
+"The different personal details on the checkout page are vital for the shipping information. As for the pet details, I was curious about my customer's pet's different breeds, pet ages, etc. I intended to use the data to improve what I sell and how much to stock. 
+
+The code prompt is supposed to confirm the email as accurate for marketing purposes and add another layer of confirmation."
+
+Obviously, it's a straightforward why for the fantasy: more customers checking out means more business and money. We also better achieved giving value to customers as they shop for pet products through the convenience of his online store.
+
+This is a vital last step as we don't want to utterly bulldoze the business context. There might be a business value we are not seeing, even how ridiculous something looks, such as what Edward expressed in the interview. You'll never know! You're the outsider here. 
+
+---
+
+Finally, you defined the product context. Now, the next step is to brainstorm a solution with your team. Providing this context is akin to drawing the outlines first in an illustration before filling in the color. Without it, you will be all over the place. (P.S.: might not be a good rule for creatives, but our discipline needs meticulousness.)
+
+As an engineer, this is an essential detail for our tickets. We get the background of the problem (the reality). We know what we need to achieve (the fantasy). And, we consider the business context (the why) before we suggest a solution. 
+
+Skipping to the solution is very dangerous as it gives zero context to the actual people who will implement it. We might even become blind to other possible solutions that can be unearthed by researching more on the context. Always give a chance for your team to critique and brainstorm. Two heads are better than one!
+
+If I didn't have the product context and had a lapse of common sense, I would bluntly suggest removing everything but the request for the credit card information, as that's the only thing needed for the transaction to happen. This will completely obliterate the shipping requirement even though it will have a chance of a conversion. We don't want that. 
+
+We might suggest removing the pet details in the earlier scenario if we take the product context wholeheartedly. Since the business value for such data is stock management, a business analyst might suggest looking into the actual product's market performance instead of focusing on a possibly misguided correlation on pet information. And let's be honest, no one has the time to enter the details of each one of their pets. The data also shows the majority of the dropoff is because of that.
+
+We could also recommend removing the email confirmation since anyone can create a burner email anyway. Entering the wrong email in the first place will result in the code not being sent, thus being unable to reach the success page. There's no accurate data that email marketing is even effective in Edward's business. One could argue that entering the credit card details is enough confirmation that they intend to buy, further reducing the number of steps in the funnel. We can always visit the marketing problem later and focus on the goal at hand, which we can argue is much more pressing.
+
+Having referenced other existing online stores, we found out that most provide an option to pay with existing payment services like Paypal, which further removes friction from checkout to success as it can give the saved personal information in their PayPal account. We can use that information for the vital shipping details. We can try that out as well!
+
+We can go on and on with the different solutions a team can suggest. Do you think they can make these quality decisions without the product context? I believe they can't. As a dev, I use this to framework what questions to ask to create a solution. No implementation can start without first defining the solution. And no solution can be determined without first formulating this product context. 
+
+P.S.: This process is just a small part of product discovery in product management. I always request or help formulate this product context as it's the bare minimum for me to do my work. There are many more behind the scenes of this process. The intention is to be able to provide a foundation. It would be a big topic altogether, especially if we dove deeper into the different disciplines to define reality and proper goal setting. Hope you learned a lot!
+
