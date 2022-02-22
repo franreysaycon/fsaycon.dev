@@ -1,0 +1,76 @@
+---
+date: "2022-02-12"
+description: "Let's talk about technical debt and why management and developers should be aware and manage it."
+duration: "10 minutes"
+mtag: soft skills
+tags: "Soft Skills, Engineering Management"
+title: "Dealing with Technical Debt"
+---
+
+Hey code adventurers!
+
+Let's talk about technical debt and the many ways you could explain this to a non-technical person, and why management and developers should be aware and manage it.
+
+## What Is Technical Debt
+Technical debt has been one of the major headaches a developer must endure during their careers. The keyword is debt. It means we borrowed something in exchange for a promise in the future to pay it back. Developers but often managers accept this overhead to speed up the development process of an application. But the problem is, we don't usually payback, causing the metaphorical interest to go up and incur penalties because of it.
+
+There's no definition or guidelines on what can constitute one as it varies for every organization. But, if I were to give one, you accrue debt if you make a decision that causes development to slow down or a possibility of a crash, no matter how low, in the future. That is debt. Just like when you don't pay your mortgage, you'll eventually be homeless. 
+
+Example scenarios of these decisions are listed below.
+
+### Scenario #1
+The organization wants to move to a more frontend modern stack as everything is slow (e.g., getting away from JQuery and moving to React). Developers begin the upgrade by doing incremental changes by adding the preferred stack to the newer modules while keeping in mind to update the older ones. They also needed to upskill themselves along the way as they're primarily JQuery developers. But suddenly, management wanted to shift focus on a feature that needed to be added immediately to the application with a tight deadline. In effect, developers deprioritized upgrading the stack. Since the deadline is unforgiving, it makes sense for developers to use what they are familiar with (JQuery) to speed up development. Now, we have a mess of a codebase with React and JQuery, increasing overall onboarding complexity. If not addressed shortly, the legacy codebase will increase in difficulty, which would incur a domino effect on developer experience, morale, and hiring. Not to mention, your users will need to endure the slow experience JQuery is known to cause as it is not on par with modern JS technologies.
+
+### Scenario #2
+Mike wanted to create a blog, but he was busy with his primary software engineer work. He didn't have time to learn new technologies like NextJS or MDX. But, he mastered HTML and CSS. So then decided to make every blog post in HTML and CSS only. I, for one, don't do this in my blog. I just typed in an MDX file, and I made a one-time React component that would process this MDX file and do the HTML and CSS for me. My way is akin to creating a README.md in Github and showing the HTML equivalent of that markdown file through automation. Mike's way is to code that HTML manually. Which do you think is the faster and better developer experience in the long run? At the very least, Mike could upload his blog earlier.
+
+### Scenario #3
+The organization is in a startup fail-fast fever. Although this is good for innovation, especially in the early stages, it's not a good mentality when growing an existing user base. As a result of this past culture, bugs crept into production. It is vital to keep growing in this scene, so new features shouldn't stop. But, instead of investing in or hiring QA automation experts, the organization decided to keep hiring more developers as their priority is pushing for more features. This decision ultimately led to a toxic environment among managers blaming developers when a bug passed through them, resulting in an exodus. App having low conversions due to these bugs. Management is left scratching their heads while the technical debt god kept pilling them with consequences. (I admit I played around with this one, haha!)
+
+As you can see from the examples, although "technical" is an adjective we use to describe this debt, not everything is about code. Everything we decide inside the software organization directly affects how we implement apps. Priorities, deadlines, management competence, general dev capabilities, etc., all contribute to this. Technical debt is not only because of developers, at least in my experience.
+
+## Explaining Technical Debt
+Now, that's great and all. But how could you describe technical debt to a non-technical person? 
+
+I have a favorite explanation for this, aside from declaring that every action has consequences which is a well-known trope in story RPGs and possibly a well-known philosophy akin to the Hammurabi code ( a bit extreme example, but there you go ). I always use the dishes metaphor.
+
+As independent adults, we cook to save money on buying takeout or deliveries. Naturally, cooking and eating homecooked food results in cleaning dishes after. These dishes pile up more as more people dwell in your apartment or house.
+
+The ideal routine is to clean these dishes every meal on a perfect day. My take is to only clean at night as I'm only with my partner and we have plates to spare. This way, I don't have to clean thrice every day. This decision led to more time washing dishes at night rather than cleaning for a few chunks of minutes after every meal. But sometimes, you either get caught up with life affairs, get engrossed in a game, or have laziness engulfing you. 
+
+These dishes remain at the sink and pile up as time goes by. The next day came, you noticed that you didn't have any clean plates anymore. You react by buying takeout (incurring additional cost) or cleaning the dishes first, delaying your meal. 
+
+The same goes for technical debt! You either avoid paying the debt entirely, which would result in the dish pile getting bigger and bigger. Having a colossal pile can cause a dish Jenga-like avalanche akin to your production breaking leading to losing money, AND you still need to pay the debt by fixing the code. Or, development, in general, will be slow akin to washing the dishes first before you can eat. 
+
+## Dealing with it
+Here are some tips to help you deal with it technical debts:
+
+### Automate everything!
+
+Anything manual is technical debt, in all honesty, in my book. Especially if the said manual process is the deployment of your application to production, it will have a high chance of going wrong and introduce a bottleneck on the developer who knows how to deploy. The same can be argued on quality assurance, documentation, syntax code reviews, etc.
+
+Automation makes things predictable. It also empowers other developers to be abstracted away from the hard stuff and speed up the overall software development process. Improving developer experience has constantly improved technical debt balance.
+
+Don't forget about reports and health checks as well! You want to react as fast as possible if something goes wrong.
+
+### Track as many as possible
+
+We know that data is the key to making data-driven decisions in product management and UX research. The same goes for managing technical debt. Tracking statistics of our application goes a long way in shortening our reaction time and knowing which areas of the application are causing problems to our users or utilized less.
+
+Whatever specific statistic the company believes is the north star metric, make sure that it is tracked and, of course, paired with diligent reporting.
+
+### Grooming Backlogs
+
+Backlog grooming exists on sprint plannings when you're practicing Agile. It intends to plan your next few sprints. You might not track everything but make sure you create an environment where developers can report possible technical debts through tickets. The backlog serves as your task tracker, and you could quickly analyze how many tickets are considered debts. From there, you can decide how many you should include in every sprint to at least lessen its impact in the future. With this, you pay your debt earlier, akin to paying your mortgage on time, accumulating less interest in the long run. I suggest including at least 20% of tickets to address these debts and have a fix as you go kind of attitude.
+
+### Communicate, communicate, communicate
+
+I can't stress enough that miscommunication, or lack thereof, is the major contributor to these debts forming most of the time. It is the effort of both management and developers to balance these debts. We should not turn a blind eye as the consequences will get more prominent in the future.
+
+Managers should listen to developers whenever they do their spikes or present their opinion on a product subject matter. They should include them and encourage them to be emphatic and voice the topic at hand. As for developers, we must raise these concerns and be the subject expert at hand. Everyone loses if no one talks to each other. 
+
+---
+
+You can never avoid technical debt. One can argue that it is even necessary as the competitive market demands growth. Do you often hear the good ol' "the users won't care how your code looks only if the app works" argument? Well, I'm afraid it's true! It's up to us to care about what the user doesn't see and ensure these intangible technical concepts won't affect their experience. 
+
+Balance is necessary. It's pointless to create the perfect and the most elegant application if it doesn't work and take years to develop. You shouldn't avoid choosing options that would release something "good enough" if it meant it would deliver value to users faster. The challenge is to know when to slow down or speed up. You can't avoid incurring debt, so you better learn to live with it.
